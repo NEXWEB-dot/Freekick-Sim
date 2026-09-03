@@ -2948,7 +2948,7 @@
       this.spin = new THREE.Vector3();
       this.gravity = -9.81;
       this.airDensity = 1.225;
-      this.dragCoeff = 0.25;
+      this.dragCoeff = 0.16; // Realistic turbulent regime drag for soccer ball
       this.magnusCoeff = 0.0068; // Enhanced curving Magnus factor for visible bend!
       this.inFlight = false;
       this.hasCollided = false;
@@ -3001,8 +3001,8 @@
       return { x: 0, y: 1.5, speed: 85 };
     }
 
-    // Iterative physics solver that matches update() with 100% precision
-    solveInitialVelocity(startPos, aimX, aimY, launchSpeed, spin) {
+    // Iterative physics solver with realistic launch angle caps (no moon shots!)
+    solveInitialVelocity(startPos, aimX, aimY, launchSpeed, spin, power = 0.8) {
       const airDensity = this.airDensity;
       const dragCoeff = this.dragCoeff;
       const mass = this.mass;
@@ -3011,6 +3011,7 @@
       const subDt = 0.008;
       const sx = spin.x, sy = spin.y, sz = spin.z;
       const pxStart = startPos.x, pyStart = startPos.y, pzStart = startPos.z;
+      const distZ = pzStart;
       const vz0 = -launchSpeed;
 
       const sim = (vx0, vy0) => {
@@ -3035,12 +3036,14 @@
         return null;
       };
 
-      // Step 1: Binary-search vy0 to hit aimY (fixed 40m/50m glitch!)
-      let vyLow = 1.0, vyHigh = 45.0, vy0 = 10.0;
-      for (let iter = 0; iter < 45; iter++) {
+      // Cap maximum vertical launch velocity so the ball NEVER balloons into the moon!
+      // Real soccer strikes launch at 12°-17° max (apex ~3.5m-5m, never 20m high)
+      const maxVy = distZ >= 48 ? 11.2 : (distZ >= 38 ? 9.8 : 8.5);
+
+      let vyLow = 1.0, vyHigh = maxVy, vy0 = 6.0;
+      for (let iter = 0; iter < 40; iter++) {
         vy0 = (vyLow + vyHigh) * 0.5;
         const r = sim(0, vy0);
-        // If ball falls into the ground before goal, vy0 was too low, so search higher!
         if (!r || r.y < aimY) {
           vyLow = vy0;
         } else {
@@ -3048,9 +3051,15 @@
         }
       }
 
+      // If power is low (< 0.65), scale down vy0 proportionally so weak kicks stay low and drop/bounce!
+      if (power < 0.65) {
+        const powerFactor = Math.max(0.35, power / 0.65);
+        vy0 *= powerFactor;
+      }
+
       // Step 2: Binary-search vx0 to hit aimX
       let vxLow = -35.0, vxHigh = 35.0, vx0 = 0.0;
-      for (let iter = 0; iter < 45; iter++) {
+      for (let iter = 0; iter < 40; iter++) {
         vx0 = (vxLow + vxHigh) * 0.5;
         const r = sim(vx0, vy0);
         if (!r) break;
@@ -3260,16 +3269,16 @@
         const distZ = ballPos.z;
         let speedBase = 22.0;
         let speedScale = 8.0;
-        if (distZ >= 48) { speedBase = 30.0; speedScale = 12.0; }
-        else if (distZ >= 38) { speedBase = 26.0; speedScale = 10.0; }
-        const launchSpeed = speedBase + 0.72 * speedScale;
+        if (distZ >= 48) { speedBase = 25.0; speedScale = 14.0; }
+        else if (distZ >= 38) { speedBase = 24.0; speedScale = 12.0; }
+        const launchSpeed = speedBase + 0.75 * speedScale;
 
         let sideSpin = -curveVal * 32.0;
         let topSpin = -12.0;
         if (isKnuckle) { sideSpin = 0; topSpin = -2.5; }
         const spin = new THREE.Vector3(topSpin, sideSpin, 0);
 
-        const vel = physics.solveInitialVelocity(ballPos, targetX, targetY, launchSpeed, spin);
+        const vel = physics.solveInitialVelocity(ballPos, targetX, targetY, launchSpeed, spin, 0.75);
         const points = physics.getSimulatedTrajectory(ballPos, vel, spin, isKnuckle);
         this.lineGeo.setFromPoints(points);
         this.line.computeLineDistances();
@@ -4055,7 +4064,7 @@
       this.dom.aimHint.style.display = 'none';
       this.aimGuide.setVisible(false);
 
-      const finalPower = Math.max(0.45, Math.min(1.0, this.power));
+      const finalPower = Math.max(0.20, Math.min(1.0, this.power));
       this.dom.powerBarFill.style.width = `${finalPower * 100}%`;
 
       // Wall defenders jump timed with the run-up
@@ -4084,22 +4093,22 @@
           let speedBase = 22.0;
           let speedScale = 8.0;
           if (distZ >= 48) {
-            speedBase = 30.0;
-            speedScale = 12.0; // 50m rocket
+            speedBase = 25.0;
+            speedScale = 14.0; // 50m rocket
           } else if (distZ >= 38) {
-            speedBase = 26.0;
-            speedScale = 10.0; // 40m long-range
+            speedBase = 24.0;
+            speedScale = 12.0; // 40m long-range
           }
 
           // Shot-type modifiers
           let powerMult = 1.0;
           let curveMult = 1.0;
           if (this.shotType === 'finesse') {
-            powerMult = 0.82;  // Softer, more placed
+            powerMult = 0.84;  // Softer, more placed
             curveMult = 1.6;   // More spin/curl
           } else if (this.shotType === 'trivela') {
-            powerMult = 0.88;  // Slightly less power
-            curveMult = 1.75;  // Strong outside-foot bend
+            powerMult = 0.90;  // Outside foot bend
+            curveMult = 1.75;
           }
 
           const launchSpeed = (speedBase + finalPower * speedScale) * powerMult;
@@ -4120,12 +4129,11 @@
           }
           const spinVector = new THREE.Vector3(topSpin, sideSpin, 0);
 
-          // *** Physics-accurate solver: iterates the same sim loop to guarantee
-          //     the ball lands exactly on the aim point in the 3.2m tall goal mouth! ***
+          // *** Physics-accurate solver: calculates initial velocity taking power into account ***
           const aimX = THREE.MathUtils.clamp(this.aimPoint.x, -3.5, 3.5);
           const aimY = THREE.MathUtils.clamp(this.aimPoint.y, 0.35, 3.05);
           const initialVelocity = this.physics.solveInitialVelocity(
-            this.ballStartPos, aimX, aimY, launchSpeed, spinVector
+            this.ballStartPos, aimX, aimY, launchSpeed, spinVector, finalPower
           );
 
           this.physics.launch(initialVelocity, spinVector, isKnuckle);
@@ -4504,11 +4512,12 @@
           const by = this.physics.pos.y;
           const bz = this.physics.pos.z;
           const targetX = bx * 0.35;
-          const targetY = Math.max(1.85, by * 0.45 + 2.0);
+          const targetY = Math.min(3.8, Math.max(1.85, by * 0.38 + 1.8));
           const targetZ = Math.min(this.ballStartPos.z + 1.2, bz + 4.0);
           this.camera.position.lerp(this._camTarget.set(targetX, targetY, targetZ), 0.12);
           const lookZ = Math.max(bz - 3.5, 0);
-          this.camera.lookAt(this._lookTarget.set(bx * 0.3, Math.max(1.0, by * 0.7), lookZ));
+          const lookY = Math.min(2.5, Math.max(0.9, by * 0.6));
+          this.camera.lookAt(this._lookTarget.set(bx * 0.3, lookY, lookZ));
         } else {
           // AIMING: Over-the-shoulder 3rd-person POV behind Lamine Yamal (#19 Spain)
           // Complete immersive view of kicker, turf, defensive wall, goalkeeper, and goal!
@@ -4538,11 +4547,12 @@
           const by = this.physics.pos.y;
           const bz = this.physics.pos.z;
           const targetX = bx * 0.45;
-          const targetY = Math.max(1.5, by * 0.45 + 1.8);
+          const targetY = Math.min(3.8, Math.max(1.5, by * 0.38 + 1.8));
           const targetZ = Math.min(this.ballStartPos.z + 0.2, bz + 3.2);
           this.camera.position.lerp(this._camTarget.set(targetX, targetY, targetZ), 0.1);
           const lookZ = Math.max(bz - 3, 0);
-          this.camera.lookAt(this._lookTarget.set(bx * 0.3, Math.max(0.8, by - 0.3), lookZ));
+          const lookY = Math.min(2.5, Math.max(0.8, by * 0.6));
+          this.camera.lookAt(this._lookTarget.set(bx * 0.3, lookY, lookZ));
         } else {
           const eyeX = this.ballStartPos.x - 0.7;
           const eyeY = 1.72;
