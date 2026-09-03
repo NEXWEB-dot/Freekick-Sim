@@ -1048,6 +1048,178 @@
         padding: 0.65rem 1.15rem;
       }
     }
+
+    /* ===================================================
+       WORLD CUP SCENARIO & CELEBRATION STYLES
+       =================================================== */
+    #worldcup-scenario-banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #7a5500, #ffd700, #b8860b, #ffd700, #7a5500);
+      background-size: 300% 100%;
+      color: #0a0500;
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.48rem 1rem;
+      z-index: 25;
+      display: none;
+      animation: wc-shine 3.5s linear infinite;
+    }
+    @keyframes wc-shine {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+    #worldcup-scenario-banner.visible { display: block; }
+
+    .btn-play.btn-worldcup-mode {
+      background: linear-gradient(135deg, #b8860b, #ffd700);
+      color: #0a0500;
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.5);
+    }
+    .btn-play.btn-worldcup-mode:hover {
+      background: linear-gradient(135deg, #daa520, #ffe566);
+      box-shadow: 0 0 50px rgba(255, 215, 0, 0.7);
+      transform: translateY(-2px);
+    }
+
+    /* Curve slider — keyboard only, visually non-draggable */
+    .curve-thumb { cursor: default !important; pointer-events: none; }
+    .curve-track { cursor: default !important; }
+
+    .curve-kb-hint {
+      font-size: 0.63rem;
+      color: var(--text-muted);
+      text-align: center;
+      letter-spacing: 0.04em;
+      margin-top: 0.22rem;
+      opacity: 0.8;
+    }
+    .kb-key {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 3px;
+      padding: 0.03rem 0.36rem;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      font-family: monospace;
+    }
+    .power-charge-hint {
+      font-size: 0.63rem;
+      color: var(--accent-green);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-align: center;
+      margin-top: 0.18rem;
+      opacity: 0.85;
+    }
+
+    /* WORLD CUP CELEBRATION CUTSCENE */
+    #celebration-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at center, rgba(8,4,0,0.78) 0%, rgba(0,0,0,0.94) 100%);
+      backdrop-filter: blur(6px);
+    }
+    #celebration-screen.visible { display: flex; animation: cel-fadein 0.7s ease; }
+    @keyframes cel-fadein { from { opacity: 0; } to { opacity: 1; } }
+
+    #fireworks-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .cel-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 2.5rem;
+      text-align: center;
+    }
+    .cel-trophy {
+      font-size: clamp(4.5rem, 13vw, 8.5rem);
+      line-height: 1;
+      filter: drop-shadow(0 0 55px rgba(255,215,0,0.95));
+      animation: trophy-rise 1.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+      margin-bottom: 1rem;
+    }
+    @keyframes trophy-rise {
+      0%   { transform: translateY(90px) scale(0.3) rotate(-10deg); opacity: 0; }
+      65%  { transform: translateY(-14px) scale(1.1) rotate(3deg); opacity: 1; }
+      100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+    }
+    .cel-title {
+      font-size: clamp(2.4rem, 7.5vw, 5.5rem);
+      font-weight: 900;
+      color: #ffd700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 40px rgba(255,215,0,0.85), 0 4px 20px rgba(0,0,0,0.9);
+      animation: cel-pop 0.8s 1.0s both cubic-bezier(0.175,0.885,0.32,1.275);
+      line-height: 1.05;
+    }
+    .cel-subtitle {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.88);
+      margin-top: 0.6rem;
+      letter-spacing: 0.06em;
+      animation: cel-pop 0.8s 1.4s both;
+    }
+    @keyframes cel-pop {
+      from { transform: scale(0.65) translateY(18px); opacity: 0; }
+      to   { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .cel-players {
+      display: flex;
+      gap: 1.1rem;
+      margin-top: 1.6rem;
+      animation: cel-pop 0.8s 1.8s both;
+    }
+    .cel-player { font-size: 2.1rem; display: inline-block; }
+    .cel-player:nth-child(1) { animation: player-bounce 0.5s 2.0s infinite alternate ease-in-out; }
+    .cel-player:nth-child(2) { animation: player-bounce 0.5s 2.1s infinite alternate ease-in-out; }
+    .cel-player:nth-child(3) { animation: player-bounce 0.5s 2.2s infinite alternate ease-in-out; }
+    .cel-player:nth-child(4) { animation: player-bounce 0.5s 2.3s infinite alternate ease-in-out; }
+    .cel-player:nth-child(5) { animation: player-bounce 0.5s 2.4s infinite alternate ease-in-out; }
+    @keyframes player-bounce {
+      from { transform: translateY(0) rotate(-3deg); }
+      to   { transform: translateY(-16px) rotate(3deg); }
+    }
+    .cel-close-btn {
+      margin-top: 2.2rem;
+      padding: 0.88rem 2.8rem;
+      background: var(--accent-gold);
+      color: #0a0500;
+      font-size: 0.95rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border: none;
+      cursor: pointer;
+      animation: cel-pop 0.8s 2.5s both;
+      transition: all 0.15s ease;
+      box-shadow: 0 0 22px rgba(255,215,0,0.4);
+    }
+    .cel-close-btn:hover {
+      background: #ffe566;
+      transform: translateY(-2px);
+      box-shadow: 0 0 32px rgba(255,215,0,0.6);
+    }
   </style>
 </head>
 <body>
@@ -1075,6 +1247,9 @@
           <button id="btn-start-game" class="btn-play">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             Play Now
+          </button>
+          <button id="btn-worldcup-game" class="btn-play btn-worldcup-mode">
+            🏆 World Cup Final
           </button>
         </div>
       </div>
@@ -1140,6 +1315,8 @@
 
     <!-- IN-GAME HUD -->
     <div id="game-hud">
+      <!-- WORLD CUP SCENARIO BANNER -->
+      <div id="worldcup-scenario-banner">🏆 WORLD CUP FINAL &nbsp;·&nbsp; 90+7' &nbsp;·&nbsp; ONE KICK TO BECOME WORLD CHAMPIONS!</div>
       <!-- TOP BAR -->
       <div class="hud-header">
         <div class="hud-left">
@@ -1172,7 +1349,7 @@
         <div class="hud-right">
           <button id="btn-cam-toggle" class="hud-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-            Cam: <span id="cam-name" class="cam-indicator">First Person</span>
+            Cam: <span id="cam-name" class="cam-indicator">Third Person</span>
           </button>
           <button id="btn-sound-toggle" class="hud-btn">
             <svg id="sound-icon-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
@@ -1184,7 +1361,7 @@
       <!-- AIM OVERLAY HINT -->
       <div id="aim-hint" class="aim-overlay-hint">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/></svg>
-        <span>Pull mouse back to wind up leg • Swipe forward through ball to strike & curve!</span>
+        <span>Move mouse to aim &nbsp;·&nbsp; <kbd style="font-size:0.75em;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.3);padding:1px 6px;border-radius:3px;">←→</kbd> keys to set spin &nbsp;·&nbsp; Click &amp; Hold anywhere to charge power &nbsp;·&nbsp; Release to shoot!</span>
       </div>
 
       <!-- BOTTOM CONTROLS -->
@@ -1229,6 +1406,7 @@
             </div>
             <span id="curve-value-display" style="font-size: 0.8rem; font-weight: 800; min-width: 90px; text-align: right; color: var(--accent-cyan);">Straight (0.0)</span>
           </div>
+          <div class="curve-kb-hint">Use <span class="kb-key">←</span> <span class="kb-key">→</span> arrow keys to adjust ball spin</div>
 
           <!-- Power Meter & Manual Kick Trigger -->
           <div class="control-row">
@@ -1242,6 +1420,7 @@
               Swing Foot
             </button>
           </div>
+          <div class="power-charge-hint">Click &amp; Hold anywhere to charge · Release to shoot</div>
         </div>
       </div>
     </div>
@@ -1295,6 +1474,24 @@
       <div class="yamal-info">
         <span class="yamal-name">L. Yamal</span>
         <span class="yamal-number">#19 · Spain</span>
+      </div>
+    </div>
+
+    <!-- WORLD CUP CELEBRATION CUTSCENE -->
+    <div id="celebration-screen">
+      <canvas id="fireworks-canvas"></canvas>
+      <div class="cel-inner">
+        <div class="cel-trophy">🏆</div>
+        <h2 class="cel-title">WORLD CHAMPIONS!</h2>
+        <p class="cel-subtitle">You scored the winning goal in the World Cup Final!</p>
+        <div class="cel-players">
+          <span class="cel-player">🤸</span>
+          <span class="cel-player">🙌</span>
+          <span class="cel-player">⚽</span>
+          <span class="cel-player">🎉</span>
+          <span class="cel-player">🏃</span>
+        </div>
+        <button class="cel-close-btn" id="btn-celebration-close">Lift The Trophy →</button>
       </div>
     </div>
   </div>
@@ -2589,15 +2786,19 @@
       this.mesh.position.set(0, 0, 0.4);
       this.scene.add(this.mesh);
 
-      this.reactionDelay = 0.28;
-      this.diveSpeed = 5.8;
-      this.state = 'IDLE'; // IDLE, ANTICIPATING, DIVING
+      this.reactionDelay = 0.30;
+      this.diveSpeed = 5.5;
+      // IDLE, ANTICIPATING, DIVING
+      this.state = 'IDLE';
       this.timeSinceKick = 0;
       this.targetPos = new THREE.Vector3(0, 0, 0.4);
       this.startPos = new THREE.Vector3(0, 0, 0.4);
       this.diveProgress = 0;
       this.guessError = 0;
-      this.saveRadius = 1.05;
+      this.saveRadius = 0.55;
+      // Ball proximity gate: GK only dives when ball is within this Z
+      this.diveProximityZ = 12.0;
+      this.ballCloseEnough = false;
     }
 
     reset(difficulty = 'pro') {
@@ -2606,89 +2807,128 @@
       this.diveProgress = 0;
       this.mesh.position.set(0, 0, 0.4);
       this.mesh.rotation.set(0, 0, 0);
+      if (this.mesh.userData.leftArm) this.mesh.userData.leftArm.rotation.z = 0;
+      if (this.mesh.userData.rightArm) this.mesh.userData.rightArm.rotation.z = 0;
       this.guessError = 0;
+      this.ballCloseEnough = false;
 
       if (difficulty === 'casual') {
-        this.reactionDelay = 0.40;
-        this.diveSpeed = 4.8;
-        this.guessError = (Math.random() - 0.5) * 1.6;
-        this.saveRadius = 0.95;
+        this.reactionDelay = 0.50;
+        this.diveSpeed = 4.0;
+        this.guessError = (Math.random() - 0.5) * 2.2;
+        this.saveRadius = 0.42;
+        this.diveProximityZ = 8.0;
       } else if (difficulty === 'pro') {
-        this.reactionDelay = 0.28;
-        this.diveSpeed = 6.0;
-        this.guessError = (Math.random() - 0.5) * 0.9;
-        this.saveRadius = 1.08;
-      } else {
-        this.reactionDelay = 0.18;
-        this.diveSpeed = 7.4;
-        this.guessError = (Math.random() - 0.5) * 0.4;
-        this.saveRadius = 1.20;
+        this.reactionDelay = 0.32;
+        this.diveSpeed = 5.5;
+        this.guessError = (Math.random() - 0.5) * 1.1;
+        this.saveRadius = 0.55;
+        this.diveProximityZ = 12.0;
+      } else { // legend
+        this.reactionDelay = 0.22;
+        this.diveSpeed = 7.0;
+        this.guessError = (Math.random() - 0.5) * 0.55;
+        this.saveRadius = 0.65;
+        this.diveProximityZ = 16.0;
       }
     }
 
     onKick(predictedGoalX, predictedGoalY, speedKmH = 90) {
       this.timeSinceKick = 0;
       this.startPos.copy(this.mesh.position);
+      this.ballCloseEnough = false;
 
-      // Competitive goalkeeper: anticipates the predicted goal arrival position
       const targetX = THREE.MathUtils.clamp(predictedGoalX + this.guessError, -3.3, 3.3);
-      const targetY = THREE.MathUtils.clamp(predictedGoalY, 0.4, 2.9);
+      // Realistic keeper reach: max ~1.75m for a dive (not floating to top corners)
+      // Wide shots need more lateral dive, less height
+      const lateralFactor = Math.abs(targetX) / 3.66;
+      const maxReachY = THREE.MathUtils.lerp(1.9, 1.35, lateralFactor);
+      const targetY = THREE.MathUtils.clamp(predictedGoalY, 0.3, maxReachY);
       this.targetPos.set(targetX, targetY, 0.25);
       this.state = 'ANTICIPATING';
     }
 
-    update(dt, isBallInFlight) {
+    update(dt, isBallInFlight, ballPos) {
       if (this.state === 'IDLE') {
-        // Ready stance weight shift
-        this.mesh.position.y = Math.abs(Math.sin(Date.now() * 0.006)) * 0.06;
+        // Ready stance: subtle weight shift side to side
+        this.mesh.position.y = Math.abs(Math.sin(Date.now() * 0.006)) * 0.05;
+        // Small lateral bounce to look alive
+        this.mesh.position.x = Math.sin(Date.now() * 0.0022) * 0.18;
       } else if (this.state === 'ANTICIPATING') {
         this.timeSinceKick += dt;
-        // Shuffle on toes toward anticipated lane
-        this.mesh.position.x = THREE.MathUtils.lerp(this.mesh.position.x, this.targetPos.x * 0.25, 0.10);
-        if (this.timeSinceKick >= this.reactionDelay) {
+
+        // Slight shuffle toward the predicted side — NOT a full dive yet
+        this.mesh.position.x = THREE.MathUtils.lerp(
+          this.mesh.position.x, this.targetPos.x * 0.12, 0.05
+        );
+
+        // Only commit to dive ONCE ball is within proximity gate
+        if (ballPos && ballPos.z <= this.diveProximityZ) {
+          this.ballCloseEnough = true;
+        }
+
+        if (this.ballCloseEnough && this.timeSinceKick >= this.reactionDelay) {
           this.state = 'DIVING';
+          this.startPos.copy(this.mesh.position);
           this.diveProgress = 0;
         }
       } else if (this.state === 'DIVING') {
         this.diveProgress += dt * (this.diveSpeed / 2.2);
         const t = Math.min(1.0, this.diveProgress);
         const ease = 1 - Math.pow(1 - t, 3);
+
         this.mesh.position.x = THREE.MathUtils.lerp(this.startPos.x, this.targetPos.x, ease);
-        this.mesh.position.y = THREE.MathUtils.lerp(this.startPos.y, this.targetPos.y, ease);
+
+        // Height: only raise if shot genuinely is high, capped at realistic dive
+        const targetDiveY = this.targetPos.y > 0.7 ? this.targetPos.y : 0.25;
+        this.mesh.position.y = THREE.MathUtils.lerp(this.startPos.y, targetDiveY, ease);
 
         const diveDirX = Math.sign(this.targetPos.x - this.startPos.x) || 1;
-        const targetTilt = -diveDirX * Math.min(1.25, Math.abs(this.targetPos.x) * 0.38);
-        this.mesh.rotation.z = THREE.MathUtils.lerp(this.mesh.rotation.z, targetTilt, 0.25);
+        // Tilt proportional to lateral reach, max ~50 degrees
+        const maxTilt = 0.9;
+        const targetTilt = -diveDirX * Math.min(maxTilt, Math.abs(this.targetPos.x) * 0.28);
+        this.mesh.rotation.z = THREE.MathUtils.lerp(this.mesh.rotation.z, targetTilt, 0.22);
 
-        // Athletic arm extension toward the ball!
+        // Athletic arm extension
         if (this.mesh.userData.leftArm && this.mesh.userData.rightArm) {
           if (diveDirX > 0) {
-            this.mesh.userData.rightArm.rotation.z = -1.35;
-            this.mesh.userData.leftArm.rotation.z = -0.7;
+            this.mesh.userData.rightArm.rotation.z = THREE.MathUtils.lerp(
+              this.mesh.userData.rightArm.rotation.z, -1.2, 0.18
+            );
+            this.mesh.userData.leftArm.rotation.z = THREE.MathUtils.lerp(
+              this.mesh.userData.leftArm.rotation.z, -0.5, 0.18
+            );
           } else {
-            this.mesh.userData.leftArm.rotation.z = 1.35;
-            this.mesh.userData.rightArm.rotation.z = 0.7;
+            this.mesh.userData.leftArm.rotation.z = THREE.MathUtils.lerp(
+              this.mesh.userData.leftArm.rotation.z, 1.2, 0.18
+            );
+            this.mesh.userData.rightArm.rotation.z = THREE.MathUtils.lerp(
+              this.mesh.userData.rightArm.rotation.z, 0.5, 0.18
+            );
           }
         }
       }
     }
 
     checkSave(ballPos, ballRadius) {
-      // Must be near the goal mouth
-      if (ballPos.z > 0.95 || ballPos.z < -0.3) {
-        return { saved: false };
-      }
+      // Only check when ball is near goal line
+      if (ballPos.z > 1.0 || ballPos.z < -0.4) return { saved: false };
 
-      // Check distance to keeper's lead glove and torso
       const diveDirX = Math.sign(this.targetPos.x - this.startPos.x) || 1;
-      const gloveX = this.mesh.position.x + diveDirX * 0.75;
-      const gloveY = this.mesh.position.y + 0.65;
+      // Lead glove position — the catching hand stretches further
+      const gloveX = this.mesh.position.x + diveDirX * 0.68;
+      const gloveY = this.mesh.position.y + 0.58;
       const gloveZ = this.mesh.position.z;
 
       const dGlove = Math.hypot(ballPos.x - gloveX, ballPos.y - gloveY, ballPos.z - gloveZ);
-      const dBody = Math.hypot(ballPos.x - this.mesh.position.x, ballPos.y - (this.mesh.position.y + 0.75), ballPos.z - this.mesh.position.z);
+      const dBody  = Math.hypot(
+        ballPos.x - this.mesh.position.x,
+        ballPos.y - (this.mesh.position.y + 0.68),
+        ballPos.z - this.mesh.position.z
+      );
 
-      if (dGlove < (this.saveRadius + ballRadius) || dBody < (0.85 + ballRadius)) {
+      // Save radius is smaller (no wall effect). Top corners go in!
+      if (dGlove < (this.saveRadius + ballRadius) || dBody < (0.52 + ballRadius)) {
         return { saved: true };
       }
       return { saved: false };
@@ -3230,13 +3470,104 @@
   }
 
   /* ===================================================
-     10. MAIN GAME ORCHESTRATOR & CONTROLLER
+     10. FIREWORKS FX (World Cup Celebration)
+     =================================================== */
+  class FireworksFX {
+    constructor(canvas) {
+      this.canvas = canvas;
+      this.ctx = canvas ? canvas.getContext('2d') : null;
+      this.particles = [];
+      this.active = false;
+      this._nextBurstTimeout = null;
+      if (canvas) {
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+      }
+    }
+
+    resize() {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    }
+
+    burst() {
+      if (!this.ctx) return;
+      this.active = true;
+      this.particles = [];
+      this._spawnBurst();
+    }
+
+    _spawnBurst() {
+      if (!this.active) return;
+      const colors = ['#ffd700','#ff4466','#00e676','#00e5ff','#ffffff','#ff8c00','#cc44ff','#ff66aa'];
+      const cx = 80 + Math.random() * (this.canvas.width - 160);
+      const cy = 40 + Math.random() * (this.canvas.height * 0.55);
+      const count = 55 + Math.floor(Math.random() * 30);
+      for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+        const speed = 2.5 + Math.random() * 9;
+        this.particles.push({
+          x: cx, y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.5,
+          life: 1.0,
+          decay: 0.010 + Math.random() * 0.014,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 2 + Math.random() * 3.5,
+          trail: []
+        });
+      }
+      this._nextBurstTimeout = setTimeout(() => this._spawnBurst(), 480 + Math.random() * 520);
+    }
+
+    stop() {
+      this.active = false;
+      clearTimeout(this._nextBurstTimeout);
+      this.particles = [];
+      if (this.ctx) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    update() {
+      if (!this.active || !this.ctx) return;
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        p.trail.push({ x: p.x, y: p.y });
+        if (p.trail.length > 5) p.trail.shift();
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.1;  // gravity
+        p.vx *= 0.98; // air resistance
+        p.life -= p.decay;
+        if (p.life <= 0) { this.particles.splice(i, 1); continue; }
+        // Draw trail
+        for (let t = 0; t < p.trail.length; t++) {
+          this.ctx.globalAlpha = (t / p.trail.length) * p.life * 0.4;
+          this.ctx.fillStyle = p.color;
+          this.ctx.beginPath();
+          this.ctx.arc(p.trail[t].x, p.trail[t].y, p.size * 0.5, 0, Math.PI * 2);
+          this.ctx.fill();
+        }
+        // Draw head
+        this.ctx.globalAlpha = p.life;
+        this.ctx.fillStyle = p.color;
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
+      this.ctx.globalAlpha = 1;
+    }
+  }
+
+  /* ===================================================
+     11. MAIN GAME ORCHESTRATOR & CONTROLLER
      =================================================== */
   class FreeKickGame {
     constructor() {
       this.canvas = document.getElementById('webgl-canvas');
       this.sound = new SoundEngine();
       this.confetti = new ConfettiFX(document.getElementById('confetti-canvas'));
+      this.fireworks = new FireworksFX(document.getElementById('fireworks-canvas'));
 
       // Three.js Core
       this.scene = new THREE.Scene();
@@ -3312,9 +3643,16 @@
       this.lastMousePos = { x: 0, y: 0 };
       this.lastMouseTime = performance.now();
 
-      // Camera Modes
-      this.cameraModes = ['First Person', 'TV Broadcast', 'Keeper POV'];
-      this.currentCamIdx = 0; // Default: First Person
+      // Camera Modes — Default: Third Person
+      this.cameraModes = ['Third Person', 'First Person', 'TV Broadcast', 'Keeper POV'];
+      this.currentCamIdx = 0; // Default: Third Person
+
+      // Scenario & Power Charging States
+      this.scenario = 'normal'; // 'normal' or 'worldcup'
+      this.isChargingPower = false;
+      this.chargeSpeed = 0.92; // Full charge in ~1.1s
+      this.celebrationGroup = null;
+      this.teammates = [];
 
       this.lastTime = performance.now();
 
@@ -3328,6 +3666,10 @@
       this.dom = {
         homeScreen: document.getElementById('home-screen'),
         btnStartGame: document.getElementById('btn-start-game'),
+        btnWorldCupGame: document.getElementById('btn-worldcup-game'),
+        wcBanner: document.getElementById('worldcup-scenario-banner'),
+        celebrationScreen: document.getElementById('celebration-screen'),
+        btnCelebrationClose: document.getElementById('btn-celebration-close'),
         diffButtons: document.querySelectorAll('.diff-btn'),
         btnBackHome: document.getElementById('btn-back-home'),
         hudScore: document.getElementById('hud-score'),
@@ -3370,8 +3712,24 @@
 
       this.dom.btnStartGame.addEventListener('click', () => {
         this.sound.init();
+        this.scenario = 'normal';
         this.startGame();
       });
+
+      if (this.dom.btnWorldCupGame) {
+        this.dom.btnWorldCupGame.addEventListener('click', () => {
+          this.sound.init();
+          this.startWorldCupScenario();
+        });
+      }
+
+      if (this.dom.btnCelebrationClose) {
+        this.dom.btnCelebrationClose.addEventListener('click', () => {
+          if (this.dom.celebrationScreen) this.dom.celebrationScreen.classList.remove('visible');
+          this.fireworks.stop();
+          this.endGame();
+        });
+      }
 
       this.dom.diffButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -3395,121 +3753,104 @@
       });
 
       // -------------------------------------------------------------
-      // MOUSE-CONTROLLED FOOT INPUT:
-      // Moving mouse positions the foot & curve angle.
-      // Pulling back winds up the kicking leg.
-      // Swiping forward strikes the ball!
+      // WHOLE-SCREEN CHARGE & MOUSE AIM CONTROLS:
+      // 1. Mouse movement: moves the aim reticle across the goal mouth.
+      //    (DOES NOT touch the curve slide bar / stick!)
+      // 2. Arrow keys / A & D: solely adjust curve slide bar.
+      // 3. Click / Touch ANYWHERE on screen and HOLD: charges power.
+      // 4. Release ANYWHERE: releases shot at charged power!
       // -------------------------------------------------------------
-      const onPointerDown = (clientX, clientY) => {
+      const onPointerDown = (clientX, clientY, target) => {
+        // Prevent starting charge if clicking UI buttons
+        if (target && target.closest && target.closest('button, .diff-btn, .btn-dist, .btn-shot-type, #outcome-banner, #game-over-modal, #celebration-screen')) {
+          return;
+        }
         if (this.state !== 'AIMING') return;
         this.isMouseDown = true;
-        this.mouseDownPos.x = clientX;
-        this.mouseDownPos.y = clientY;
-        this.mouseCurrentPos.x = clientX;
-        this.mouseCurrentPos.y = clientY;
-        this.lastMousePos.x = clientX;
-        this.lastMousePos.y = clientY;
-        this.lastMouseTime = performance.now();
+        this.isChargingPower = true;
+        this.dom.btnKick.classList.add('charging');
+        this.dom.btnKick.textContent = 'Charging...';
       };
 
       const onPointerMove = (clientX, clientY) => {
-        const now = performance.now();
-        const dt = Math.max(0.001, (now - this.lastMouseTime) / 1000);
-        this.mouseVelocity.x = (clientX - this.lastMousePos.x) / dt;
-        this.mouseVelocity.y = (clientY - this.lastMousePos.y) / dt;
-        this.lastMousePos.x = clientX;
-        this.lastMousePos.y = clientY;
-        this.lastMouseTime = now;
-
-        this.mouseCurrentPos.x = clientX;
-        this.mouseCurrentPos.y = clientY;
-
         if (this.state === 'AIMING') {
-          // Horizontal screen position controls the strike cut / curve angle
+          // Horizontal mouse movement controls aim target X in goal ONLY
+          // CURVE SLIDER IS NOT MOVED BY MOUSE!
           const screenNormX = (clientX / window.innerWidth - 0.5) * 2.0; // -1 to +1
-          this.setCurve(screenNormX);
+          this.aimPoint.x = THREE.MathUtils.clamp(screenNormX * 3.4, -3.4, 3.4);
 
-          // Aim point shifts dynamically across goal mouth width
-          this.aimPoint.x = THREE.MathUtils.clamp(screenNormX * 3.2, -3.4, 3.4);
+          // Vertical mouse position controls aim target Y (shot height in goal)
+          const screenNormY = 1.0 - (clientY / window.innerHeight);
+          this.aimPoint.y = THREE.MathUtils.clamp(0.35 + screenNormY * 2.7, 0.35, 3.05);
 
-          // Vertical mouse position controls shot height (low driven to top bins!)
-          if (!this.isMouseDown) {
-            const screenNormY = 1.0 - (clientY / window.innerHeight);
-            this.aimPoint.y = THREE.MathUtils.clamp(0.45 + screenNormY * 2.55, 0.4, 3.0);
-          }
-
-          // If mouse is pressed: vertical drag back controls windup power
-          if (this.isMouseDown) {
-            const dragBackY = clientY - this.mouseDownPos.y;
-            // Pulling down = winding up
-            const windupNorm = THREE.MathUtils.clamp(dragBackY / 180, 0.0, 1.0);
-            this.power = windupNorm;
-            this.dom.powerBarFill.style.width = `${this.power * 100}%`;
-
-            // Update kicker 3D leg articulation in real time
-            this.kicker.updateFromMouse(screenNormX, this.power, this.curveValue);
-
-            // Fast forward swipe detection: If user pulls back, then snaps mouse upward!
-            if (this.mouseVelocity.y < -350 && dragBackY > 40) {
-              this.executeFootStrike();
-            }
-          } else {
-            // Free mouse hover: boot subtly tracks mouse to show ready stance
-            this.kicker.updateFromMouse(screenNormX, 0.05, this.curveValue);
-          }
+          // Kicker stance reflects aim direction & spin
+          this.kicker.updateFromMouse(this.aimPoint.x / 3.4, this.power, this.curveValue);
         }
       };
 
       const onPointerUp = () => {
-        if (!this.isMouseDown) return;
+        if (!this.isMouseDown && !this.isChargingPower) return;
         this.isMouseDown = false;
 
-        // If mouse was pulled back with sufficient power, release triggers forward strike!
-        if (this.state === 'AIMING' && this.power >= 0.25) {
-          this.executeFootStrike();
+        if (this.state === 'AIMING' && this.isChargingPower) {
+          this.isChargingPower = false;
+          this.dom.btnKick.classList.remove('charging');
+          this.dom.btnKick.textContent = 'Swing Foot';
+
+          if (this.power >= 0.20) {
+            this.executeFootStrike();
+          } else {
+            // Cancelled tap without holding
+            this.power = 0;
+            this.dom.powerBarFill.style.width = '0%';
+          }
         }
       };
 
-      this.canvas.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY));
+      // Whole-screen pointer listeners (mouse & touch)
+      window.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY, e.target));
       window.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
-      window.addEventListener('mouseup', onPointerUp);
+      window.addEventListener('mouseup', () => onPointerUp());
 
-      this.canvas.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
+      window.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) onPointerDown(e.touches[0].clientX, e.touches[0].clientY, e.target);
       }, { passive: true });
       window.addEventListener('touchmove', (e) => {
         if (e.touches.length === 1) onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
       }, { passive: true });
-      window.addEventListener('touchend', onPointerUp);
+      window.addEventListener('touchend', () => onPointerUp());
 
-      // Manual Swing Button & Spacebar Support
-      let keyCharging = false;
-      const startKeyCharge = () => {
-        if (this.state !== 'AIMING') return;
-        keyCharging = true;
-        this.dom.btnKick.classList.add('charging');
-        this.dom.btnKick.textContent = 'Winding Up...';
-      };
-
-      const releaseKeyCharge = () => {
-        if (keyCharging && this.state === 'AIMING') {
-          keyCharging = false;
-          this.dom.btnKick.classList.remove('charging');
-          this.dom.btnKick.textContent = 'Swing Foot';
-          this.executeFootStrike();
+      // Manual Swing Button & Spacebar Support for power charging
+      this.dom.btnKick.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.state === 'AIMING') {
+          this.isChargingPower = true;
+          this.dom.btnKick.classList.add('charging');
+          this.dom.btnKick.textContent = 'Charging...';
         }
-      };
+      });
 
-      this.dom.btnKick.addEventListener('mousedown', (e) => { e.preventDefault(); startKeyCharge(); });
-      window.addEventListener('mouseup', releaseKeyCharge);
-
+      // Keyboard Controls:
+      // Arrow keys (← / →) and A/D solely adjust curve slider
+      // Spacebar charges power and releases
       window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && !e.repeat && this.state === 'AIMING') startKeyCharge();
-        if (e.code === 'ArrowLeft' || e.code === 'KeyA') this.setCurve(this.curveValue - 0.2);
-        if (e.code === 'ArrowRight' || e.code === 'KeyD') this.setCurve(this.curveValue + 0.2);
+        if (e.code === 'Space' && !e.repeat && this.state === 'AIMING') {
+          this.isChargingPower = true;
+          this.dom.btnKick.classList.add('charging');
+          this.dom.btnKick.textContent = 'Charging...';
+        }
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+          this.setCurve(this.curveValue - 0.08);
+        }
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+          this.setCurve(this.curveValue + 0.08);
+        }
       });
       window.addEventListener('keyup', (e) => {
-        if (e.code === 'Space') releaseKeyCharge();
+        if (e.code === 'Space' && this.state === 'AIMING' && this.isChargingPower) {
+          onPointerUp();
+        }
       });
 
       // Distance Selector Buttons (25m, 40m, 50m)
@@ -3529,7 +3870,6 @@
           this.isKnuckleMode = !this.isKnuckleMode;
           btnKnuckle.classList.toggle('active', this.isKnuckleMode);
           if (this.isKnuckleMode) {
-            // Knuckleball deactivates shot type specifics
             this.setShotType('power');
           }
           this.setCurve(this.curveValue);
@@ -3549,7 +3889,13 @@
         }
       });
 
-      this.dom.btnModalRetry.addEventListener('click', () => this.startGame());
+      this.dom.btnModalRetry.addEventListener('click', () => {
+        if (this.scenario === 'worldcup') {
+          this.startWorldCupScenario();
+        } else {
+          this.startGame();
+        }
+      });
       this.dom.btnModalMenu.addEventListener('click', () => this.showHomeScreen());
     }
 
@@ -3622,10 +3968,26 @@
       this.dom.shotStatusText.textContent = `${dist}m Distance • Foot Ready • ${bootDesc}`;
     }
 
+    startWorldCupScenario() {
+      this.scenario = 'worldcup';
+      this.totalRounds = 1;
+      this.selectedDistance = 25;
+      if (this.dom.wcBanner) this.dom.wcBanner.classList.add('visible');
+      this.startGame();
+    }
+
     startGame() {
+      if (this.scenario !== 'worldcup') {
+        this.scenario = 'normal';
+        this.totalRounds = 5;
+        if (this.dom.wcBanner) this.dom.wcBanner.classList.remove('visible');
+      }
       this.dom.homeScreen.classList.add('hidden');
       this.dom.homeScreen.style.display = 'none';
       this.dom.gameOverModal.classList.remove('visible');
+      if (this.dom.celebrationScreen) this.dom.celebrationScreen.classList.remove('visible');
+      this.cleanCelebration();
+      this.fireworks.stop();
       this.goalsScored = 0;
       this.streak = 0;
       this.currentRound = 1;
@@ -3635,16 +3997,26 @@
       this.setupRound(1);
     }
 
+    cleanCelebration() {
+      if (this.celebrationGroup) {
+        this.scene.remove(this.celebrationGroup);
+        this.celebrationGroup = null;
+      }
+      this.teammates = [];
+    }
+
     setupRound(roundNum, customDist) {
       this.state = 'AIMING';
       this.currentRound = roundNum;
       this.power = 0;
+      this.isChargingPower = false;
       this.dom.powerBarFill.style.width = '0%';
       this.dom.btnKick.classList.remove('charging');
       this.dom.btnKick.textContent = 'Swing Foot';
       this.dom.aimHint.style.display = 'flex';
       this.dom.outcomeBanner.className = '';
       this.confetti.stop();
+      this.cleanCelebration();
 
       // Support 25m, 40m, 50m distances
       const distZ = customDist || this.selectedDistance || 25.0;
@@ -3771,6 +4143,71 @@
       );
     }
 
+    triggerWorldCupCelebration() {
+      this.sound.playGoalRoar();
+      this.confetti.spawn();
+      this.confetti.spawn();
+      this.fireworks.burst();
+      this.spawnCelebratingTeammates();
+
+      // Show celebration cutscene overlay after brief pitch run
+      setTimeout(() => {
+        if (this.dom.celebrationScreen) {
+          this.dom.celebrationScreen.classList.add('visible');
+        }
+        this.sound.playGoalRoar();
+      }, 1600);
+    }
+
+    spawnCelebratingTeammates() {
+      this.cleanCelebration();
+      this.celebrationGroup = new THREE.Group();
+      this.scene.add(this.celebrationGroup);
+
+      // Sparkling 3D World Cup Trophy on Presentation Podium
+      const goldMat = new THREE.MeshStandardMaterial({
+        color: 0xffd700,
+        metalness: 0.95,
+        roughness: 0.15,
+        emissive: 0x553e00
+      });
+      const podium = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.85, 1.1, 0.35, 24),
+        new THREE.MeshStandardMaterial({ color: 0x07111e, roughness: 0.4 })
+      );
+      podium.position.set(this.ballStartPos.x, 0.175, this.ballStartPos.z - 2.8);
+      this.celebrationGroup.add(podium);
+
+      const trophyBase = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, 0.65, 16), goldMat);
+      trophyBase.position.set(this.ballStartPos.x, 0.7, this.ballStartPos.z - 2.8);
+
+      const trophyGlobe = new THREE.Mesh(new THREE.SphereGeometry(0.24, 16, 16), goldMat);
+      trophyGlobe.position.set(0, 0.48, 0);
+      trophyBase.add(trophyGlobe);
+      this.celebrationGroup.add(trophyBase);
+      this.trophyMesh = trophyBase;
+
+      // Celebrating Spain teammates running toward Yamal
+      this.teammates = [];
+      const offsets = [
+        [-3.2, 4.0], [2.8, 4.5], [-4.2, 2.0], [3.5, 2.2], [-2.0, 5.5], [1.8, 5.8]
+      ];
+      offsets.forEach(([ox, oz], i) => {
+        const mate = CharacterFactory.createHumanoid(0xc8102e, false);
+        mate.position.set(this.ballStartPos.x + ox * 2.2, 0, this.ballStartPos.z + oz * 1.8);
+        mate.lookAt(this.ballStartPos.x, 0, this.ballStartPos.z);
+        // Arms up cheering
+        if (mate.children[4]) mate.children[4].rotation.z = 2.4;
+        if (mate.children[5]) mate.children[5].rotation.z = -2.4;
+        this.celebrationGroup.add(mate);
+        this.teammates.push({
+          mesh: mate,
+          target: new THREE.Vector3(this.ballStartPos.x + ox * 0.4, 0, this.ballStartPos.z + oz * 0.3),
+          speed: 3.8 + i * 0.45
+        });
+      });
+    }
+
     resolveShot(outcome, detailMsg = '') {
       if (this.state === 'CUTSCENE') return;
       this.state = 'CUTSCENE';
@@ -3801,7 +4238,13 @@
       let finalDetail = detailMsg;
 
       if (isGoal) {
-        if (this.physics.isKnuckleball) {
+        if (this.scenario === 'worldcup') {
+          bannerTitle = '🏆 WORLD CHAMPIONS!';
+          finalDetail = '90+7\' WINNER! SPAIN WINS THE WORLD CUP!';
+          this.showOutcomeBanner(bannerTitle, finalDetail);
+          this.triggerWorldCupCelebration();
+          return;
+        } else if (this.physics.isKnuckleball) {
           bannerTitle = '⚡ KNUCKLEBALL!';
           finalDetail = 'Violent knuckle wobble left the keeper bamboozled!';
         } else if (this.lastShotType === 'finesse') {
@@ -3834,8 +4277,8 @@
       const b = this.dom.outcomeBanner;
       b.className = 'visible';
 
-      if (outcome === 'GOAL') {
-        this.dom.bannerTitle.textContent = 'GOAL!';
+      if (outcome === 'GOAL' || outcome.includes('WORLD CHAMPIONS')) {
+        this.dom.bannerTitle.textContent = outcome;
         this.dom.bannerSubtitle.textContent = detail || 'Incredible Finish!';
       } else if (outcome === 'SAVE') {
         b.classList.add('save');
@@ -3864,9 +4307,11 @@
       this.saveCareerStats();
 
       this.dom.modalFinalScore.textContent = `${this.goalsScored} / ${this.totalRounds}`;
-      
+
       let rank = 'Training Ground Duty';
-      if (this.goalsScored === 5) rank = 'World Class Legend 🏆';
+      if (this.scenario === 'worldcup') {
+        rank = this.goalsScored >= 1 ? 'WORLD CHAMPIONS 2026 🏆🥇' : 'World Cup Final Heartbreak 💔';
+      } else if (this.goalsScored === 5) rank = 'World Class Legend 🏆';
       else if (this.goalsScored === 4) rank = 'Sniper of the Match ⚽';
       else if (this.goalsScored === 3) rank = 'Pro Set-Piece Specialist ⭐';
       else if (this.goalsScored >= 1) rank = 'Promising Talent 🎯';
@@ -3883,6 +4328,11 @@
 
     showHomeScreen() {
       this.state = 'HOME';
+      this.scenario = 'normal';
+      if (this.dom.wcBanner) this.dom.wcBanner.classList.remove('visible');
+      if (this.dom.celebrationScreen) this.dom.celebrationScreen.classList.remove('visible');
+      this.cleanCelebration();
+      this.fireworks.stop();
       this.dom.homeScreen.style.display = 'flex';
       this.dom.homeScreen.classList.remove('hidden');
       this.dom.gameOverModal.classList.remove('visible');
@@ -4013,6 +4463,18 @@
       const mode = this.cameraModes[this.currentCamIdx];
 
       if (this.state === 'CUTSCENE') {
+        if (this.scenario === 'worldcup' && this.roundOutcomes[this.roundOutcomes.length - 1] === 'goal') {
+          // Cinematic 360-degree celebration camera orbiting Yamal, celebrating teammates, and golden trophy!
+          const t = Date.now() * 0.0007;
+          const orbitR = 4.6;
+          const camX = this.ballStartPos.x + Math.sin(t) * orbitR;
+          const camZ = this.ballStartPos.z + Math.cos(t) * orbitR;
+          this.camera.position.lerp(this._camTarget.set(camX, 2.1, camZ), 0.06);
+          this._lookTarget.set(this.ballStartPos.x, 1.2, this.ballStartPos.z - 0.5);
+          this.camera.lookAt(this._lookTarget);
+          return;
+        }
+
         this._camTarget.set(this.physics.pos.x * 0.3, 1.4, -4.5);
         this.camera.position.lerp(this._camTarget, 0.05);
         this._lookTarget.set(this.physics.pos.x, this.physics.pos.y + 0.2, this.physics.pos.z);
@@ -4020,9 +4482,44 @@
         return;
       }
 
-      if (mode === 'First Person') {
+      if (mode === 'Third Person') {
         if (this.state === 'RUN_UP') {
-          // Dynamic forward sprint stride towards the ball!
+          // Dynamic tracking behind player as he sprints toward the ball
+          const p = this.kicker.runUpProgress;
+          const eyeStartX = this.ballStartPos.x - 0.65;
+          const eyeEndX = this.ballStartPos.x - 0.3;
+          const eyeStartZ = this.ballStartPos.z + 3.8;
+          const eyeEndZ = this.ballStartPos.z + 2.2;
+
+          const camX = THREE.MathUtils.lerp(eyeStartX, eyeEndX, p);
+          const camZ = THREE.MathUtils.lerp(eyeStartZ, eyeEndZ, p);
+          const camY = 2.05 + Math.sin(p * Math.PI * 4) * 0.05;
+
+          this.camera.position.set(camX, camY, camZ);
+          this._lookTarget.set(this.aimPoint.x * 0.45, 1.45, 0);
+          this.camera.lookAt(this._lookTarget);
+        } else if (this.state === 'FLIGHT') {
+          // Smooth third-person chase camera tracking curling ball from behind & above
+          const bx = this.physics.pos.x;
+          const by = this.physics.pos.y;
+          const bz = this.physics.pos.z;
+          const targetX = bx * 0.35;
+          const targetY = Math.max(1.85, by * 0.45 + 2.0);
+          const targetZ = Math.min(this.ballStartPos.z + 1.2, bz + 4.0);
+          this.camera.position.lerp(this._camTarget.set(targetX, targetY, targetZ), 0.12);
+          const lookZ = Math.max(bz - 3.5, 0);
+          this.camera.lookAt(this._lookTarget.set(bx * 0.3, Math.max(1.0, by * 0.7), lookZ));
+        } else {
+          // AIMING: Over-the-shoulder 3rd-person POV behind Lamine Yamal (#19 Spain)
+          // Complete immersive view of kicker, turf, defensive wall, goalkeeper, and goal!
+          const eyeX = this.ballStartPos.x - 0.65;
+          const eyeY = 2.05;
+          const eyeZ = this.ballStartPos.z + 3.8;
+          this.camera.position.lerp(this._camTarget.set(eyeX, eyeY, eyeZ), 0.1);
+          this.camera.lookAt(this._lookTarget.set(this.aimPoint.x * 0.45, 1.45, 0));
+        }
+      } else if (mode === 'First Person') {
+        if (this.state === 'RUN_UP') {
           const p = this.kicker.runUpProgress;
           const eyeStartX = this.ballStartPos.x - 0.7;
           const eyeEndX = this.ballStartPos.x - 0.25;
@@ -4031,13 +4528,12 @@
           
           const camX = THREE.MathUtils.lerp(eyeStartX, eyeEndX, p);
           const camZ = THREE.MathUtils.lerp(eyeStartZ, eyeEndZ, p);
-          const camY = 1.72 + Math.sin(p * Math.PI * 4) * 0.05; // Head bob on sprint strides!
+          const camY = 1.72 + Math.sin(p * Math.PI * 4) * 0.05;
           
           this.camera.position.set(camX, camY, camZ);
           this._lookTarget.set(this.aimPoint.x * 0.7, 1.2, 0);
           this.camera.lookAt(this._lookTarget);
         } else if (this.state === 'FLIGHT') {
-          // Smooth ball follow from just behind and above
           const bx = this.physics.pos.x;
           const by = this.physics.pos.y;
           const bz = this.physics.pos.z;
@@ -4048,7 +4544,6 @@
           const lookZ = Math.max(bz - 3, 0);
           this.camera.lookAt(this._lookTarget.set(bx * 0.3, Math.max(0.8, by - 0.3), lookZ));
         } else {
-          // AIMING: Standing at the start of the run-up, focused on ball and goal!
           const eyeX = this.ballStartPos.x - 0.7;
           const eyeY = 1.72;
           const eyeZ = this.ballStartPos.z + 2.2;
@@ -4059,9 +4554,6 @@
         this.camera.position.lerp(this._camTarget.set(-26, 10, 14), 0.08);
         this.camera.lookAt(this._lookTarget.set(this.physics.pos.x, this.physics.pos.y + 0.5, this.physics.pos.z));
       } else if (mode === 'Keeper POV') {
-        // Position camera behind the keeper inside the net (z = -1.2, y = 1.75)
-        // Looking through the goal frame towards the field: target reticle, goal posts,
-        // and incoming ball are 100% visible from keeper's perspective!
         this._camTarget.set(this.keeper.mesh.position.x * 0.7, 1.78, -1.25);
         this.camera.position.lerp(this._camTarget, 0.08);
         this._lookTarget.set(this.physics.pos.x, Math.max(0.8, this.physics.pos.y), this.physics.pos.z);
@@ -4076,6 +4568,13 @@
       const dt = Math.min((now - this.lastTime) / 1000, 0.05);
       this.lastTime = now;
 
+      // Whole-screen power charging
+      if (this.state === 'AIMING' && this.isChargingPower) {
+        this.power = Math.min(1.0, this.power + dt * this.chargeSpeed);
+        this.dom.powerBarFill.style.width = `${this.power * 100}%`;
+        this.kicker.updateFromMouse(this.aimPoint.x / 3.4, this.power, this.curveValue);
+      }
+
       // Update Aim Guide with exact physical trajectory
       if (this.state === 'AIMING') {
         this.aimGuide.updateGuide(this.ballStartPos, this.aimPoint, this.curveValue, this.isKnuckleMode, this.physics);
@@ -4085,10 +4584,24 @@
       this.kicker.update(dt);
       this.physics.update(dt);
       this.wall.update(dt);
-      this.keeper.update(dt, isBallInFlight);
+      // Pass ballPos to keeper so proximity gate prevents early unrealistic jumping
+      this.keeper.update(dt, isBallInFlight, this.physics.pos);
       this.confetti.update();
+      this.fireworks.update();
       this.trail.update(this.physics.pos, this.state === 'FLIGHT');
       this.stadium.updateNet(dt, this.physics.pos, this.physics.inGoalNet);
+
+      // Animate celebration 3D cutscene
+      if (this.state === 'CUTSCENE' && this.celebrationGroup) {
+        if (this.trophyMesh) {
+          this.trophyMesh.rotation.y += dt * 1.6;
+        }
+        if (this.teammates && this.teammates.length > 0) {
+          this.teammates.forEach(tm => {
+            tm.mesh.position.lerp(tm.target, dt * tm.speed * 0.45);
+          });
+        }
+      }
 
       this.checkCollisionsAndOutcomes();
       this.updateCamera();
