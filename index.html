@@ -2617,9 +2617,12 @@
     constructor(scene) {
       this.scene = scene;
       this.group = new THREE.Group();
+      this.mesh = this.group; // Essential alias: provides .mesh interface
       this.scene.add(this.group);
 
       this.ballPos = new THREE.Vector3();
+      this.readyOffset = new THREE.Vector3(-0.7, 0, 2.2);
+      this.plantOffset = new THREE.Vector3(-0.35, 0, 0.05);
       this.windup = 0.0; // 0 (rest) to 1.0 (full backswing)
       this.swingProgress = 0.0;
       this.isSwinging = false;
@@ -2903,6 +2906,12 @@
       const swingSpeed = 6.2 + (this.swingPower * 4.5);
       this.swingProgress += dt * swingSpeed;
 
+      // Ball impact must ALWAYS fire once swing reaches impact point, even if frame rate drops
+      if (this.swingProgress >= 0.62 && !this.hasImpacted) {
+        this.hasImpacted = true;
+        if (this.onImpact) this.onImpact();
+      }
+
       if (this.swingProgress <= 1.0) {
         const t = this.swingProgress;
         const ease = Math.pow(t, 2.2);
@@ -2914,11 +2923,6 @@
         const startKneeX = -0.15 + (this.windup * 1.65);
         const strikeKneeX = 0.05;
         this.kneeJoint.rotation.x = THREE.MathUtils.lerp(startKneeX, strikeKneeX, ease);
-
-        if (t >= 0.62 && !this.hasImpacted) {
-          this.hasImpacted = true;
-          if (this.onImpact) this.onImpact();
-        }
       } else if (this.swingProgress < 2.0) {
         const t = this.swingProgress - 1.0;
         this.hipJoint.rotation.x = THREE.MathUtils.lerp(0.82, 0.2, t * 0.8);
@@ -4170,13 +4174,11 @@
           this.dom.btnKick.classList.remove('charging');
           this.dom.btnKick.textContent = 'Swing Foot';
 
-          if (this.power >= 0.20) {
-            this.executeFootStrike();
-          } else {
-            // Cancelled tap without holding
-            this.power = 0;
-            this.dom.powerBarFill.style.width = '0%';
+          // Quick tap defaults to 50% power so clicking Swing Foot or tapping screen always shoots!
+          if (this.power < 0.20) {
+            this.power = 0.50;
           }
+          this.executeFootStrike();
         }
       };
 
@@ -4561,56 +4563,75 @@
         this.wall.triggerJump();
       }, 140);
 
+      let shotLaunched = false;
+      let safetyRunUpTimeout = null;
+
+      const launchShotBall = () => {
+        if (shotLaunched) return;
+        shotLaunched = true;
+        if (safetyRunUpTimeout) clearTimeout(safetyRunUpTimeout);
+
+        this.state = 'FLIGHT';
+        try { this.sound.playKick(); } catch (e) {}
+
+        const isKnuckle = this.isKnuckleMode || (Math.abs(this.curveValue) <= 0.14 && finalPower >= 0.70);
+        const distZ = this.ballStartPos.z;
+        const launchSpeed = this.getLaunchSpeed(distZ, finalPower, this.shotType);
+
+        let curveMult = 1.0;
+        if (this.shotType === 'finesse') curveMult = 1.6;
+        else if (this.shotType === 'trivela') curveMult = 1.75;
+
+        let sideSpin = -this.curveValue * 32.0 * curveMult;
+        let topSpin = -12.0 * finalPower;
+        if (this.shotType === 'finesse') {
+          topSpin = -8.0 * finalPower;
+        } else if (this.shotType === 'trivela') {
+          sideSpin = this.curveValue * 38.0 * curveMult;
+          topSpin = -6.0 * finalPower;
+        }
+        if (isKnuckle) {
+          sideSpin = (Math.random() - 0.5) * 3.5;
+          topSpin = -2.5;
+        }
+        const spinVector = new THREE.Vector3(topSpin, sideSpin, 0);
+
+        const aimX = THREE.MathUtils.clamp(this.aimPoint.x, -3.5, 3.5);
+        const aimY = THREE.MathUtils.clamp(this.aimPoint.y, 0.35, 3.05);
+        const initialVelocity = this.physics.solveInitialVelocity(
+          this.ballStartPos, aimX, aimY, launchSpeed, spinVector, finalPower
+        );
+
+        this.physics.launch(initialVelocity, spinVector, isKnuckle);
+        this.trail.reset();
+
+        const prediction = this.physics.predictGoalIntersection(this.ballStartPos, initialVelocity, spinVector);
+        this.keeper.onKick(prediction.x, prediction.y, Math.round(launchSpeed * 3.6));
+
+        this.lastShotSpeed = Math.round(launchSpeed * 3.6);
+        this.lastShotType = this.shotType;
+        if (this.lastShotSpeed > this.topSpeed) {
+          this.topSpeed = this.lastShotSpeed;
+        }
+      };
+
+      // Safety timeout: if run-up animation somehow gets delayed, launch ball within 1.0s
+      safetyRunUpTimeout = setTimeout(() => {
+        if (this.state === 'RUN_UP' && !shotLaunched) {
+          console.warn('Run-up safety timeout triggered');
+          launchShotBall();
+        }
+      }, 1000);
+
       // Trigger athletic run-up sprint and ball strike!
       this.kicker.triggerRunUpAndStrike(
         finalPower,
         this.curveValue,
         () => {
-          this.sound.playStep();
+          try { this.sound.playStep(); } catch (e) {}
         },
         () => {
-          this.state = 'FLIGHT';
-          this.sound.playKick();
-
-          const isKnuckle = this.isKnuckleMode || (Math.abs(this.curveValue) <= 0.14 && finalPower >= 0.70);
-          const distZ = this.ballStartPos.z;
-          const launchSpeed = this.getLaunchSpeed(distZ, finalPower, this.shotType);
-
-          let curveMult = 1.0;
-          if (this.shotType === 'finesse') curveMult = 1.6;
-          else if (this.shotType === 'trivela') curveMult = 1.75;
-
-          let sideSpin = -this.curveValue * 32.0 * curveMult;
-          let topSpin = -12.0 * finalPower;
-          if (this.shotType === 'finesse') {
-            topSpin = -8.0 * finalPower;
-          } else if (this.shotType === 'trivela') {
-            sideSpin = this.curveValue * 38.0 * curveMult;
-            topSpin = -6.0 * finalPower;
-          }
-          if (isKnuckle) {
-            sideSpin = (Math.random() - 0.5) * 3.5;
-            topSpin = -2.5;
-          }
-          const spinVector = new THREE.Vector3(topSpin, sideSpin, 0);
-
-          const aimX = THREE.MathUtils.clamp(this.aimPoint.x, -3.5, 3.5);
-          const aimY = THREE.MathUtils.clamp(this.aimPoint.y, 0.35, 3.05);
-          const initialVelocity = this.physics.solveInitialVelocity(
-            this.ballStartPos, aimX, aimY, launchSpeed, spinVector, finalPower
-          );
-
-          this.physics.launch(initialVelocity, spinVector, isKnuckle);
-          this.trail.reset();
-
-          const prediction = this.physics.predictGoalIntersection(this.ballStartPos, initialVelocity, spinVector);
-          this.keeper.onKick(prediction.x, prediction.y, Math.round(launchSpeed * 3.6));
-
-          this.lastShotSpeed = Math.round(launchSpeed * 3.6);
-          this.lastShotType = this.shotType;
-          if (this.lastShotSpeed > this.topSpeed) {
-            this.topSpeed = this.lastShotSpeed;
-          }
+          launchShotBall();
         }
       );
     }
@@ -4863,20 +4884,21 @@
 
       // Kicker
       if (f0.kickerPos && f1.kickerPos) {
-        this.kicker.mesh.position.lerpVectors(f0.kickerPos, f1.kickerPos, alpha);
+        const kickerObj = this.kicker.mesh || this.kicker.group;
+        if (kickerObj) kickerObj.position.lerpVectors(f0.kickerPos, f1.kickerPos, alpha);
       }
-      this.kicker.runUpProgress = THREE.MathUtils.lerp(f0.kickerProgress, f1.kickerProgress, alpha);
+      this.kicker.runUpProgress = THREE.MathUtils.lerp(f0.kickerProgress || 0, f1.kickerProgress || 0, alpha);
 
       // Keeper
-      if (f0.keeperPos && f1.keeperPos) {
+      if (f0.keeperPos && f1.keeperPos && this.keeper.mesh) {
         this.keeper.mesh.position.lerpVectors(f0.keeperPos, f1.keeperPos, alpha);
-      }
-      this.keeper.mesh.rotation.z = THREE.MathUtils.lerp(f0.keeperRotZ, f1.keeperRotZ, alpha);
-      if (this.keeper.mesh.userData.leftArm) {
-        this.keeper.mesh.userData.leftArm.rotation.z = THREE.MathUtils.lerp(f0.keeperLeftArmRotZ, f1.keeperLeftArmRotZ, alpha);
-      }
-      if (this.keeper.mesh.userData.rightArm) {
-        this.keeper.mesh.userData.rightArm.rotation.z = THREE.MathUtils.lerp(f0.keeperRightArmRotZ, f1.keeperRightArmRotZ, alpha);
+        this.keeper.mesh.rotation.z = THREE.MathUtils.lerp(f0.keeperRotZ || 0, f1.keeperRotZ || 0, alpha);
+        if (this.keeper.mesh.userData && this.keeper.mesh.userData.leftArm) {
+          this.keeper.mesh.userData.leftArm.rotation.z = THREE.MathUtils.lerp(f0.keeperLeftArmRotZ || 0, f1.keeperLeftArmRotZ || 0, alpha);
+        }
+        if (this.keeper.mesh.userData && this.keeper.mesh.userData.rightArm) {
+          this.keeper.mesh.userData.rightArm.rotation.z = THREE.MathUtils.lerp(f0.keeperRightArmRotZ || 0, f1.keeperRightArmRotZ || 0, alpha);
+        }
       }
 
       // Wall defenders
@@ -5223,74 +5245,84 @@
     animate() {
       requestAnimationFrame(() => this.animate());
 
-      const now = performance.now();
-      const dt = Math.min((now - this.lastTime) / 1000, 0.05);
-      this.lastTime = now;
+      try {
+        const now = performance.now();
+        const dt = Math.min((now - this.lastTime) / 1000, 0.05);
+        this.lastTime = now;
 
-      if (this.isReplaying) {
-        this.updateReplayPlayback(dt);
-      } else {
-        // Whole-screen power charging
-        if (this.state === 'AIMING' && this.isChargingPower) {
-          this.power = Math.min(1.0, this.power + dt * this.chargeSpeed);
-          this.dom.powerBarFill.style.width = `${this.power * 100}%`;
-          this.kicker.updateFromMouse(this.aimPoint.x / 3.4, this.power, this.curveValue);
-        }
-
-        // Update Aim Guide with exact physical trajectory
-        if (this.state === 'AIMING') {
-          this.aimGuide.updateGuide(this.ballStartPos, this.aimPoint, this.curveValue, this.isKnuckleMode, this.physics, this.shotType);
-        }
-
-        const isBallInFlight = (this.state === 'FLIGHT' || this.state === 'CUTSCENE');
-        this.kicker.update(dt);
-        this.physics.update(dt);
-        this.wall.update(dt);
-        // Pass ballPos to keeper so proximity gate prevents early unrealistic jumping
-        this.keeper.update(dt, isBallInFlight, this.physics.pos);
-        this.confetti.update();
-        this.fireworks.update();
-        this.trail.update(this.physics.pos, this.state === 'FLIGHT');
-        this.stadium.updateNet(dt, this.physics.pos, this.physics.inGoalNet);
-
-        // Frame buffer recording for Instant Replay
-        if (this.recordingShot && (this.state === 'RUN_UP' || this.state === 'FLIGHT' || this.state === 'CUTSCENE')) {
-          if (this.replayFrames.length < 500) {
-            this.replayFrames.push({
-              time: (performance.now() - this.shotStartTime) / 1000,
-              state: this.state,
-              ballPos: this.physics.pos.clone(),
-              ballRot: new THREE.Euler().copy(this.ballMesh.rotation),
-              kickerProgress: this.kicker.runUpProgress,
-              kickerPos: this.kicker.mesh.position.clone(),
-              keeperPos: this.keeper.mesh.position.clone(),
-              keeperRotZ: this.keeper.mesh.rotation.z,
-              keeperLeftArmRotZ: this.keeper.mesh.userData.leftArm ? this.keeper.mesh.userData.leftArm.rotation.z : 0,
-              keeperRightArmRotZ: this.keeper.mesh.userData.rightArm ? this.keeper.mesh.userData.rightArm.rotation.z : 0,
-              wallJumpProgress: this.wall.jumpProgress,
-              wallJumpY: this.wall.currentJumpY || 0,
-              inGoalNet: this.physics.inGoalNet
-            });
+        if (this.isReplaying) {
+          this.updateReplayPlayback(dt);
+        } else {
+          // Whole-screen power charging
+          if (this.state === 'AIMING' && this.isChargingPower) {
+            this.power = Math.min(1.0, this.power + dt * this.chargeSpeed);
+            this.dom.powerBarFill.style.width = `${this.power * 100}%`;
+            this.kicker.updateFromMouse(this.aimPoint.x / 3.4, this.power, this.curveValue);
           }
+
+          // Update Aim Guide with exact physical trajectory
+          if (this.state === 'AIMING') {
+            this.aimGuide.updateGuide(this.ballStartPos, this.aimPoint, this.curveValue, this.isKnuckleMode, this.physics, this.shotType);
+          }
+
+          const isBallInFlight = (this.state === 'FLIGHT' || this.state === 'CUTSCENE');
+          this.kicker.update(dt);
+          this.physics.update(dt);
+          this.wall.update(dt);
+          // Pass ballPos to keeper so proximity gate prevents early unrealistic jumping
+          this.keeper.update(dt, isBallInFlight, this.physics.pos);
+          this.confetti.update();
+          this.fireworks.update();
+          this.trail.update(this.physics.pos, this.state === 'FLIGHT');
+          this.stadium.updateNet(dt, this.physics.pos, this.physics.inGoalNet);
+
+          // Frame buffer recording for Instant Replay
+          if (this.recordingShot && (this.state === 'RUN_UP' || this.state === 'FLIGHT' || this.state === 'CUTSCENE')) {
+            if (this.replayFrames.length < 500) {
+              try {
+                const kickerObj = this.kicker.mesh || this.kicker.group;
+                const keeperObj = this.keeper.mesh;
+                this.replayFrames.push({
+                  time: (performance.now() - this.shotStartTime) / 1000,
+                  state: this.state,
+                  ballPos: this.physics.pos.clone(),
+                  ballRot: new THREE.Euler().copy(this.ballMesh.rotation),
+                  kickerProgress: this.kicker.runUpProgress || 0,
+                  kickerPos: kickerObj ? kickerObj.position.clone() : new THREE.Vector3(),
+                  keeperPos: keeperObj ? keeperObj.position.clone() : new THREE.Vector3(),
+                  keeperRotZ: keeperObj ? keeperObj.rotation.z : 0,
+                  keeperLeftArmRotZ: (keeperObj && keeperObj.userData && keeperObj.userData.leftArm) ? keeperObj.userData.leftArm.rotation.z : 0,
+                  keeperRightArmRotZ: (keeperObj && keeperObj.userData && keeperObj.userData.rightArm) ? keeperObj.userData.rightArm.rotation.z : 0,
+                  wallJumpProgress: this.wall.jumpProgress || 0,
+                  wallJumpY: this.wall.currentJumpY || 0,
+                  inGoalNet: !!this.physics.inGoalNet
+                });
+              } catch (frameErr) {
+                console.warn('Replay frame capture error:', frameErr);
+              }
+            }
+          }
+
+          // Animate celebration 3D cutscene
+          if (this.state === 'CUTSCENE' && this.celebrationGroup) {
+            if (this.trophyMesh) {
+              this.trophyMesh.rotation.y += dt * 1.6;
+            }
+            if (this.teammates && this.teammates.length > 0) {
+              this.teammates.forEach(tm => {
+                tm.mesh.position.lerp(tm.target, dt * tm.speed * 0.45);
+              });
+            }
+          }
+
+          this.checkCollisionsAndOutcomes();
         }
 
-        // Animate celebration 3D cutscene
-        if (this.state === 'CUTSCENE' && this.celebrationGroup) {
-          if (this.trophyMesh) {
-            this.trophyMesh.rotation.y += dt * 1.6;
-          }
-          if (this.teammates && this.teammates.length > 0) {
-            this.teammates.forEach(tm => {
-              tm.mesh.position.lerp(tm.target, dt * tm.speed * 0.45);
-            });
-          }
-        }
-
-        this.checkCollisionsAndOutcomes();
+        this.updateCamera();
+        this.renderer.render(this.scene, this.camera);
+      } catch (loopErr) {
+        console.error('Animation loop error:', loopErr);
       }
-
-      this.updateCamera();
-      this.renderer.render(this.scene, this.camera);
     }
 
     onResize() {
