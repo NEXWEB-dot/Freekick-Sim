@@ -3271,6 +3271,8 @@
       this.inGoalNet = false;
       this.isKnuckleball = false;
       this.flightTime = 0;
+      this.groundRolling = false;
+      this.groundRolled = false;
       this.mesh.position.copy(this.pos);
       this.mesh.rotation.set(0, 0, 0);
     }
@@ -3283,6 +3285,8 @@
       this.inGoalNet = false;
       this.isKnuckleball = isKnuckleball;
       this.flightTime = 0;
+      this.groundRolling = false;
+      this.groundRolled = false;
     }
 
     predictGoalIntersection(startPos, velocity, spinVector) {
@@ -3494,6 +3498,19 @@
           this.vel.x *= 0.75;
           this.vel.z *= 0.75;
           this.spin.multiplyScalar(0.7);
+
+          // If the ball is rolling very slowly on the ground it will never reach the goal
+          // Clamp near-zero bounces to zero so we can detect and kill the shot
+          if (Math.abs(this.vel.y) < 0.25) {
+            this.vel.y = 0;
+            this.groundRolling = true;
+          }
+        }
+
+        // Kill shots that are rolling to a stop on the turf (speed < 1 m/s while on ground)
+        if (this.groundRolling && this.vel.length() < 1.0) {
+          this.vel.set(0, 0, 0);
+          this.groundRolled = true;  // flag checked in checkCollisionsAndOutcomes
         }
       }
 
@@ -4968,6 +4985,18 @@
       if (this.state !== 'FLIGHT') return;
       const bPos = this.physics.pos;
       const bRad = this.physics.radius;
+
+      // Safety net: if the ball has rolled to a stop on the turf, resolve as a miss immediately
+      if (this.physics.groundRolled) {
+        this.resolveShot('MISS', 'Into the Turf');
+        return;
+      }
+
+      // Safety net: 7-second flight timeout so the game never gets stuck in FLIGHT
+      if (this.physics.flightTime > 7.0) {
+        this.resolveShot('MISS', 'Off Target');
+        return;
+      }
 
       // 1. Wall Collision
       const wallHit = this.wall.checkCollision(bPos, bRad);
