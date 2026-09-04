@@ -3315,7 +3315,7 @@
       const mass = this.mass;
       const magnusCoeff = this.magnusCoeff;
       const gravity = this.gravity;
-      const subDt = 0.008;
+      const subDt = 0.016;  // Coarser time-step keeps accuracy while cutting iterations in half
       const sx = spin.x, sy = spin.y, sz = spin.z;
       const pxStart = startPos.x, pyStart = startPos.y, pzStart = startPos.z;
       const distZ = pzStart;
@@ -3324,7 +3324,7 @@
       const sim = (vx0, vy0) => {
         let px = pxStart, py = pyStart, pz = pzStart;
         let vx = vx0, vy = vy0, vz = vz0;
-        for (let step = 0; step < 1800; step++) {
+        for (let step = 0; step < 500; step++) {  // 500 steps is ample for up to 50m trajectories
           const spd = Math.sqrt(vx * vx + vy * vy + vz * vz);
           if (spd < 0.01) return null;
           const dFact = -0.5 * airDensity * dragCoeff * 0.038 * spd / mass;
@@ -3348,7 +3348,7 @@
       const maxVy = Math.max(12.0, 6.0 + distZ * 0.19); // 25m: 12.0, 40m: 13.6, 50m: 15.5
 
       let vyLow = 0.5, vyHigh = maxVy, vy0 = 7.0;
-      for (let iter = 0; iter < 45; iter++) {
+      for (let iter = 0; iter < 22; iter++) {  // 22 iterations converges to <0.001m precision
         vy0 = (vyLow + vyHigh) * 0.5;
         const r = sim(0, vy0);
         if (!r || r.y < aimY) {
@@ -3366,7 +3366,7 @@
 
       // Step 2: Binary-search vx0 to hit aimX
       let vxLow = -40.0, vxHigh = 40.0, vx0 = 0.0;
-      for (let iter = 0; iter < 45; iter++) {
+      for (let iter = 0; iter < 22; iter++) {  // 22 iterations converges to <0.001m precision
         vx0 = (vxLow + vxHigh) * 0.5;
         const r = sim(vx0, vy0);
         if (!r) break;
@@ -3512,6 +3512,7 @@
   class AimGuide {
     constructor(scene) {
       this.scene = scene;
+      this._guideFrameCount = 0;  // throttle heavy solver to every 3rd frame
       
       this.group = new THREE.Group();
       this.scene.add(this.group);
@@ -3570,6 +3571,10 @@
       this.group.position.set(targetX, targetY, 0.05);
       this.reticle.rotation.z += 0.02;
       this.bullseye.scale.setScalar(1.0 + Math.sin(Date.now() * 0.008) * 0.18);
+
+      // Throttle the heavy physics solver: only recompute trajectory every 3rd frame
+      this._guideFrameCount = (this._guideFrameCount + 1) % 3;
+      if (this._guideFrameCount !== 0) return;
 
       if (physics) {
         // Compute the real simulated trajectory
