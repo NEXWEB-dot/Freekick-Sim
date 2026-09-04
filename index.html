@@ -4198,10 +4198,30 @@
         e.preventDefault();
         e.stopPropagation();
         if (this.state === 'AIMING' && !this.isReplaying) {
+          this.isMouseDown = true;  // must be set so onPointerUp fires the shot
           this.isChargingPower = true;
           this.dom.btnKick.classList.add('charging');
           this.dom.btnKick.textContent = 'Charging...';
         }
+      });
+      // Release on the button itself must fire the shot too
+      this.dom.btnKick.addEventListener('mouseup', (e) => {
+        e.stopPropagation();
+        onPointerUp();
+      });
+      this.dom.btnKick.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.state === 'AIMING' && !this.isReplaying) {
+          this.isMouseDown = true;
+          this.isChargingPower = true;
+          this.dom.btnKick.classList.add('charging');
+          this.dom.btnKick.textContent = 'Charging...';
+        }
+      }, { passive: false });
+      this.dom.btnKick.addEventListener('touchend', (e) => {
+        e.stopPropagation();
+        onPointerUp();
       });
 
       // Keyboard Controls:
