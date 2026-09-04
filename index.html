@@ -840,6 +840,7 @@
     #outcome-banner.visible {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
     }
 
     #outcome-banner.miss {
@@ -883,6 +884,243 @@
       color: var(--text-muted);
       font-weight: 600;
       letter-spacing: 0.05em;
+    }
+
+    .banner-actions {
+      margin-top: 0.9rem;
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .btn-banner-replay {
+      background: rgba(0, 229, 255, 0.12);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      backdrop-filter: blur(8px);
+      border-radius: 4px;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+    }
+
+    .btn-banner-replay:hover {
+      background: rgba(0, 229, 255, 0.28);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.55);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+
+    /* INSTANT REPLAY OVERLAY HUD */
+    .replay-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 70;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: none;
+    }
+
+    .replay-overlay.visible {
+      opacity: 1;
+      display: block;
+      pointer-events: auto;
+    }
+
+    .replay-badge {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      background: rgba(14, 20, 29, 0.92);
+      border: 1px solid rgba(255, 51, 102, 0.6);
+      box-shadow: 0 0 24px rgba(255, 51, 102, 0.35);
+      padding: 0.45rem 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      backdrop-filter: blur(10px);
+      border-radius: 4px;
+    }
+
+    .replay-rec-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-red);
+      box-shadow: 0 0 10px var(--accent-red);
+      animation: replay-blink 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes replay-blink {
+      0% { opacity: 0.3; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1.15); }
+    }
+
+    .replay-title {
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .replay-speed-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 0.15rem 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent-gold);
+      border-radius: 3px;
+    }
+
+    .replay-controls-bar {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 15, 22, 0.94);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 8px 36px rgba(0, 0, 0, 0.75);
+      padding: 0.65rem 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      backdrop-filter: blur(14px);
+      border-radius: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .replay-btn {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.45rem 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      border-radius: 4px;
+    }
+
+    .replay-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .replay-btn-primary {
+      background: rgba(0, 229, 255, 0.2);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .replay-btn-primary:hover {
+      background: rgba(0, 229, 255, 0.35);
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.4);
+    }
+
+    .replay-speed-group {
+      display: flex;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .replay-speed-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 0.45rem 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .replay-speed-btn:hover {
+      color: #fff;
+    }
+
+    .replay-speed-btn.active {
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 900;
+    }
+
+    .replay-btn-exit {
+      background: rgba(0, 230, 118, 0.2);
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .replay-btn-exit:hover {
+      background: rgba(0, 230, 118, 0.35);
+      box-shadow: 0 0 16px rgba(0, 230, 118, 0.45);
+    }
+
+    /* HOME SCREEN DISTANCE SELECTOR */
+    .home-distance-select {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.45rem;
+      margin-top: 0.6rem;
+    }
+
+    .home-distance-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .home-distance-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .home-dist-btn {
+      background: rgba(14, 20, 29, 0.85);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 0.45rem 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      border-radius: 4px;
+    }
+
+    .home-dist-btn:hover {
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .home-dist-btn.active {
+      background: rgba(0, 230, 118, 0.2);
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      box-shadow: 0 0 14px rgba(0, 230, 118, 0.35);
     }
 
     /* GAME OVER MODAL */
@@ -1243,6 +1481,15 @@
           <button class="diff-btn" data-diff="legend">Legend</button>
         </div>
 
+        <div class="home-distance-select">
+          <span class="home-distance-label">Free Kick Distance:</span>
+          <div class="home-distance-buttons">
+            <button class="home-dist-btn active" data-dist="25">25m Standard</button>
+            <button class="home-dist-btn" data-dist="40">40m Long-Range</button>
+            <button class="home-dist-btn" data-dist="50">50m Rocket 🔥</button>
+          </div>
+        </div>
+
         <div class="hero-actions">
           <button id="btn-start-game" class="btn-play">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -1430,6 +1677,49 @@
       <div class="banner-title" id="banner-title">GOAL!</div>
       <div class="banner-subtitle" id="banner-subtitle">Top Bins Perfection</div>
       <div class="banner-stats" id="banner-stats">98.5 KM/H • 25.4 METERS</div>
+      <div class="banner-actions">
+        <button id="btn-banner-replay" class="btn-banner-replay">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+          Instant Replay (R)
+        </button>
+      </div>
+    </div>
+
+    <!-- INSTANT REPLAY OVERLAY HUD -->
+    <div id="replay-overlay" class="replay-overlay">
+      <div class="replay-badge">
+        <span class="replay-rec-dot"></span>
+        <span class="replay-title">REPLAY</span>
+        <span id="replay-speed-indicator" class="replay-speed-badge">0.5x SLOW-MO</span>
+      </div>
+
+      <div class="replay-controls-bar">
+        <button id="btn-replay-rewind" class="replay-btn" title="Rewind to start (R)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg>
+          <span>Rewind</span>
+        </button>
+
+        <button id="btn-replay-playpause" class="replay-btn replay-btn-primary" title="Play / Pause (Space)">
+          <svg id="replay-icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          <svg id="replay-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span id="replay-playpause-text">Pause</span>
+        </button>
+
+        <div class="replay-speed-group">
+          <button class="replay-speed-btn" data-spd="0.25">0.25x</button>
+          <button class="replay-speed-btn active" data-spd="0.5">0.5x</button>
+          <button class="replay-speed-btn" data-spd="1.0">1.0x</button>
+        </div>
+
+        <button id="btn-replay-cam" class="replay-btn" title="Switch Replay Angle (C)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          <span>Angle: <strong id="replay-cam-name">Third Person</strong></span>
+        </button>
+
+        <button id="btn-replay-exit" class="replay-btn replay-btn-exit" title="Next Kick / Continue (Enter)">
+          <span>Next Kick ➔</span>
+        </button>
+      </div>
     </div>
 
     <!-- GAME OVER MODAL -->
@@ -2706,6 +2996,12 @@
       this.isJumping = false;
       this.jumpProgress = 0;
       this.jumpPeak = 0.20; // Realistic jump (20cm)
+      this.wallCenter = new THREE.Vector3(0, 0, 15);
+      this.currentJumpY = 0;
+    }
+
+    getCenter() {
+      return this.wallCenter.clone();
     }
 
     setupWall(ballPos, wallCount = 4) {
@@ -2715,6 +3011,7 @@
       this.defenders = [];
       this.isJumping = false;
       this.jumpProgress = 0;
+      this.currentJumpY = 0;
 
       // In authentic football, the wall guards the near post side,
       // leaving the far side open for the goalkeeper or for curling around!
@@ -2723,6 +3020,7 @@
       const dirToGoal = new THREE.Vector3().subVectors(targetAim, ballPos).normalize();
       const wallDist = 9.15;
       const wallCenter = new THREE.Vector3().copy(ballPos).addScaledVector(dirToGoal, wallDist);
+      this.wallCenter.copy(wallCenter);
 
       const perp = new THREE.Vector3(-dirToGoal.z, 0, dirToGoal.x).normalize();
       const spacing = 0.44; // Compact shoulder-to-shoulder formation
@@ -2747,8 +3045,16 @@
     }
 
     update(dt) {
-      if (!this.isJumping) return;
+      if (!this.isJumping) {
+        this.currentJumpY = 0;
+        return;
+      }
       this.jumpProgress += dt * 3.4;
+      if (this.jumpProgress < Math.PI) {
+        this.currentJumpY = Math.sin(this.jumpProgress) * this.jumpPeak;
+      } else {
+        this.currentJumpY = 0;
+      }
       this.defenders.forEach(d => {
         const p = Math.max(0, this.jumpProgress - d.userData.jumpDelay);
         if (p < Math.PI) {
@@ -2759,6 +3065,7 @@
       });
       if (this.jumpProgress > Math.PI + 0.3) {
         this.isJumping = false;
+        this.currentJumpY = 0;
       }
     }
 
@@ -3001,7 +3308,7 @@
       return { x: 0, y: 1.5, speed: 85 };
     }
 
-    // Iterative physics solver with realistic launch angle caps (no moon shots!)
+    // Iterative physics solver with distance-aware aerodynamic calibration (fixed for 25m, 40m, 50m)
     solveInitialVelocity(startPos, aimX, aimY, launchSpeed, spin, power = 0.8) {
       const airDensity = this.airDensity;
       const dragCoeff = this.dragCoeff;
@@ -3017,7 +3324,7 @@
       const sim = (vx0, vy0) => {
         let px = pxStart, py = pyStart, pz = pzStart;
         let vx = vx0, vy = vy0, vz = vz0;
-        for (let step = 0; step < 1500; step++) {
+        for (let step = 0; step < 1800; step++) {
           const spd = Math.sqrt(vx * vx + vy * vy + vz * vz);
           if (spd < 0.01) return null;
           const dFact = -0.5 * airDensity * dragCoeff * 0.038 * spd / mass;
@@ -3031,17 +3338,17 @@
           py += vy * subDt;
           pz += vz * subDt;
           if (pz <= 0.05) return { x: px, y: py };
-          if (py < -3) return null;
+          if (py < -3.0) return null;
         }
         return null;
       };
 
-      // Cap maximum vertical launch velocity so the ball NEVER balloons into the moon!
-      // Real soccer strikes launch at 12°-17° max (apex ~3.5m-5m, never 20m high)
-      const maxVy = distZ >= 48 ? 11.2 : (distZ >= 38 ? 9.8 : 8.5);
+      // Cap maximum vertical launch velocity dynamically based on distance so the ball can reach any corner
+      // from 25m up to 50m while maintaining an authentic dipping trajectory without moon shots!
+      const maxVy = Math.max(12.0, 6.0 + distZ * 0.19); // 25m: 12.0, 40m: 13.6, 50m: 15.5
 
-      let vyLow = 1.0, vyHigh = maxVy, vy0 = 6.0;
-      for (let iter = 0; iter < 40; iter++) {
+      let vyLow = 0.5, vyHigh = maxVy, vy0 = 7.0;
+      for (let iter = 0; iter < 45; iter++) {
         vy0 = (vyLow + vyHigh) * 0.5;
         const r = sim(0, vy0);
         if (!r || r.y < aimY) {
@@ -3058,8 +3365,8 @@
       }
 
       // Step 2: Binary-search vx0 to hit aimX
-      let vxLow = -35.0, vxHigh = 35.0, vx0 = 0.0;
-      for (let iter = 0; iter < 40; iter++) {
+      let vxLow = -40.0, vxHigh = 40.0, vx0 = 0.0;
+      for (let iter = 0; iter < 45; iter++) {
         vx0 = (vxLow + vxHigh) * 0.5;
         const r = sim(vx0, vy0);
         if (!r) break;
@@ -3257,7 +3564,7 @@
       this.scene.add(this.line);
     }
 
-    updateGuide(ballPos, aimPoint, curveVal, isKnuckle = false, physics = null) {
+    updateGuide(ballPos, aimPoint, curveVal, isKnuckle = false, physics = null, shotType = 'power') {
       const targetX = THREE.MathUtils.clamp(aimPoint.x, -3.5, 3.5);
       const targetY = THREE.MathUtils.clamp(aimPoint.y, 0.35, 3.05);
       this.group.position.set(targetX, targetY, 0.05);
@@ -3269,16 +3576,22 @@
         const distZ = ballPos.z;
         let speedBase = 22.0;
         let speedScale = 8.0;
-        if (distZ >= 48) { speedBase = 25.0; speedScale = 14.0; }
-        else if (distZ >= 38) { speedBase = 24.0; speedScale = 12.0; }
-        const launchSpeed = speedBase + 0.75 * speedScale;
+        if (distZ >= 48) { speedBase = 29.5; speedScale = 12.5; }
+        else if (distZ >= 38) { speedBase = 26.5; speedScale = 10.5; }
+        let powerMult = 1.0;
+        let curveMult = 1.0;
+        if (shotType === 'finesse') { powerMult = 0.88; curveMult = 1.6; }
+        else if (shotType === 'trivela') { powerMult = 0.92; curveMult = 1.75; }
+        const launchSpeed = (speedBase + 0.82 * speedScale) * powerMult;
 
-        let sideSpin = -curveVal * 32.0;
-        let topSpin = -12.0;
+        let sideSpin = -curveVal * 32.0 * curveMult;
+        let topSpin = -12.0 * 0.82;
+        if (shotType === 'finesse') topSpin = -8.0 * 0.82;
+        else if (shotType === 'trivela') { sideSpin = curveVal * 38.0 * curveMult; topSpin = -6.0 * 0.82; }
         if (isKnuckle) { sideSpin = 0; topSpin = -2.5; }
         const spin = new THREE.Vector3(topSpin, sideSpin, 0);
 
-        const vel = physics.solveInitialVelocity(ballPos, targetX, targetY, launchSpeed, spin, 0.75);
+        const vel = physics.solveInitialVelocity(ballPos, targetX, targetY, launchSpeed, spin, 0.82);
         const points = physics.getSimulatedTrajectory(ballPos, vel, spin, isKnuckle);
         this.lineGeo.setFromPoints(points);
         this.line.computeLineDistances();
@@ -3653,8 +3966,21 @@
       this.lastMouseTime = performance.now();
 
       // Camera Modes — Default: Third Person
-      this.cameraModes = ['Third Person', 'First Person', 'TV Broadcast', 'Keeper POV'];
+      this.cameraModes = ['Third Person', 'First Person', 'TV Broadcast', 'Keeper POV', 'Defender View'];
       this.currentCamIdx = 0; // Default: Third Person
+
+      // Instant Replay State
+      this.replayFrames = [];
+      this.lastRecordedReplay = [];
+      this.isReplaying = false;
+      this.recordingShot = false;
+      this.shotStartTime = 0;
+      this.replayTime = 0;
+      this.replaySpeed = 0.5;
+      this.replayPaused = false;
+      this.autoAdvanceTimer = null;
+      this.lastShotSpeed = 0;
+      this.lastShotType = 'power';
 
       // Scenario & Power Charging States
       this.scenario = 'normal'; // 'normal' or 'worldcup'
@@ -3700,6 +4026,19 @@
         bannerTitle: document.getElementById('banner-title'),
         bannerSubtitle: document.getElementById('banner-subtitle'),
         bannerStats: document.getElementById('banner-stats'),
+        btnBannerReplay: document.getElementById('btn-banner-replay'),
+        replayOverlay: document.getElementById('replay-overlay'),
+        btnReplayRewind: document.getElementById('btn-replay-rewind'),
+        btnReplayPlayPause: document.getElementById('btn-replay-playpause'),
+        replayPlayPauseText: document.getElementById('replay-playpause-text'),
+        replayIconPlay: document.getElementById('replay-icon-play'),
+        replayIconPause: document.getElementById('replay-icon-pause'),
+        replaySpeedBtns: document.querySelectorAll('.replay-speed-btn'),
+        replaySpeedIndicator: document.getElementById('replay-speed-indicator'),
+        btnReplayCam: document.getElementById('btn-replay-cam'),
+        replayCamName: document.getElementById('replay-cam-name'),
+        btnReplayExit: document.getElementById('btn-replay-exit'),
+        homeDistBtns: document.querySelectorAll('.home-dist-btn'),
         gameOverModal: document.getElementById('game-over-modal'),
         modalFinalScore: document.getElementById('modal-final-score'),
         modalRank: document.getElementById('modal-rank'),
@@ -3714,6 +4053,13 @@
         statBestStreak: document.getElementById('stat-best-streak'),
         statMaxSpeed: document.getElementById('stat-max-speed')
       };
+    }
+
+    cycleCamera() {
+      this.currentCamIdx = (this.currentCamIdx + 1) % this.cameraModes.length;
+      const mode = this.cameraModes[this.currentCamIdx];
+      if (this.dom.camName) this.dom.camName.textContent = mode;
+      if (this.dom.replayCamName) this.dom.replayCamName.textContent = mode;
     }
 
     initEvents() {
@@ -3750,10 +4096,7 @@
 
       this.dom.btnBackHome.addEventListener('click', () => this.showHomeScreen());
 
-      this.dom.btnCamToggle.addEventListener('click', () => {
-        this.currentCamIdx = (this.currentCamIdx + 1) % this.cameraModes.length;
-        this.dom.camName.textContent = this.cameraModes[this.currentCamIdx];
-      });
+      this.dom.btnCamToggle.addEventListener('click', () => this.cycleCamera());
 
       this.dom.btnSoundToggle.addEventListener('click', () => {
         const isMuted = this.sound.toggleMute();
@@ -3770,11 +4113,11 @@
       // 4. Release ANYWHERE: releases shot at charged power!
       // -------------------------------------------------------------
       const onPointerDown = (clientX, clientY, target) => {
-        // Prevent starting charge if clicking UI buttons
-        if (target && target.closest && target.closest('button, .diff-btn, .btn-dist, .btn-shot-type, #outcome-banner, #game-over-modal, #celebration-screen')) {
+        // Prevent starting charge if clicking UI buttons or replay
+        if (target && target.closest && target.closest('button, .diff-btn, .btn-dist, .home-dist-btn, .btn-shot-type, #outcome-banner, #replay-overlay, #game-over-modal, #celebration-screen')) {
           return;
         }
-        if (this.state !== 'AIMING') return;
+        if (this.state !== 'AIMING' || this.isReplaying) return;
         this.isMouseDown = true;
         this.isChargingPower = true;
         this.dom.btnKick.classList.add('charging');
@@ -3782,9 +4125,8 @@
       };
 
       const onPointerMove = (clientX, clientY) => {
-        if (this.state === 'AIMING') {
+        if (this.state === 'AIMING' && !this.isReplaying) {
           // Horizontal mouse movement controls aim target X in goal ONLY
-          // CURVE SLIDER IS NOT MOVED BY MOUSE!
           const screenNormX = (clientX / window.innerWidth - 0.5) * 2.0; // -1 to +1
           this.aimPoint.x = THREE.MathUtils.clamp(screenNormX * 3.4, -3.4, 3.4);
 
@@ -3801,7 +4143,7 @@
         if (!this.isMouseDown && !this.isChargingPower) return;
         this.isMouseDown = false;
 
-        if (this.state === 'AIMING' && this.isChargingPower) {
+        if (this.state === 'AIMING' && this.isChargingPower && !this.isReplaying) {
           this.isChargingPower = false;
           this.dom.btnKick.classList.remove('charging');
           this.dom.btnKick.textContent = 'Swing Foot';
@@ -3833,7 +4175,7 @@
       this.dom.btnKick.addEventListener('mousedown', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (this.state === 'AIMING') {
+        if (this.state === 'AIMING' && !this.isReplaying) {
           this.isChargingPower = true;
           this.dom.btnKick.classList.add('charging');
           this.dom.btnKick.textContent = 'Charging...';
@@ -3841,13 +4183,38 @@
       });
 
       // Keyboard Controls:
-      // Arrow keys (← / →) and A/D solely adjust curve slider
-      // Spacebar charges power and releases
+      // Space: Charge power in AIMING, or Play/Pause in Replay
+      // C: Cycle camera angle
+      // R: Trigger Instant Replay or rewind replay
+      // Enter: Exit Replay / advance to next kick
+      // Arrow keys (← / →) and A/D: adjust curve slider
       window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && !e.repeat && this.state === 'AIMING') {
-          this.isChargingPower = true;
-          this.dom.btnKick.classList.add('charging');
-          this.dom.btnKick.textContent = 'Charging...';
+        if (e.code === 'KeyC') {
+          this.cycleCamera();
+        }
+        if (e.code === 'KeyR') {
+          if (this.isReplaying) {
+            this.rewindReplay();
+          } else if (this.lastRecordedReplay && this.lastRecordedReplay.length > 5) {
+            this.startReplay();
+          }
+        }
+        if (e.code === 'Space') {
+          if (this.isReplaying) {
+            e.preventDefault();
+            this.toggleReplayPause();
+            return;
+          }
+          if (!e.repeat && this.state === 'AIMING') {
+            this.isChargingPower = true;
+            this.dom.btnKick.classList.add('charging');
+            this.dom.btnKick.textContent = 'Charging...';
+          }
+        }
+        if (e.code === 'Enter' && this.isReplaying) {
+          e.preventDefault();
+          this.stopReplay();
+          return;
         }
         if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
           this.setCurve(this.curveValue - 0.08);
@@ -3857,12 +4224,12 @@
         }
       });
       window.addEventListener('keyup', (e) => {
-        if (e.code === 'Space' && this.state === 'AIMING' && this.isChargingPower) {
+        if (e.code === 'Space' && this.state === 'AIMING' && this.isChargingPower && !this.isReplaying) {
           onPointerUp();
         }
       });
 
-      // Distance Selector Buttons (25m, 40m, 50m)
+      // Distance Selector Buttons in HUD (25m, 40m, 50m)
       ['25', '40', '50'].forEach(distStr => {
         const btn = document.getElementById(`dist-btn-${distStr}`);
         if (btn) {
@@ -3871,6 +4238,44 @@
           });
         }
       });
+
+      // Home Screen Distance Selector Buttons
+      if (this.dom.homeDistBtns) {
+        this.dom.homeDistBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const dist = parseInt(btn.dataset.dist, 10);
+            this.setDistance(dist);
+          });
+        });
+      }
+
+      // Replay HUD controls
+      if (this.dom.btnBannerReplay) {
+        this.dom.btnBannerReplay.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.startReplay();
+        });
+      }
+      if (this.dom.btnReplayRewind) {
+        this.dom.btnReplayRewind.addEventListener('click', () => this.rewindReplay());
+      }
+      if (this.dom.btnReplayPlayPause) {
+        this.dom.btnReplayPlayPause.addEventListener('click', () => this.toggleReplayPause());
+      }
+      if (this.dom.replaySpeedBtns) {
+        this.dom.replaySpeedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const spd = parseFloat(btn.dataset.spd);
+            this.setReplaySpeed(spd);
+          });
+        });
+      }
+      if (this.dom.btnReplayCam) {
+        this.dom.btnReplayCam.addEventListener('click', () => this.cycleCamera());
+      }
+      if (this.dom.btnReplayExit) {
+        this.dom.btnReplayExit.addEventListener('click', () => this.stopReplay());
+      }
 
       // Knuckleball Toggle Button
       const btnKnuckle = document.getElementById('btn-knuckle-toggle');
@@ -3954,6 +4359,9 @@
       document.querySelectorAll('.btn-dist').forEach(b => {
         b.classList.toggle('active', parseInt(b.dataset.dist, 10) === dist);
       });
+      document.querySelectorAll('.home-dist-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.dist, 10) === dist);
+      });
       if (this.state === 'AIMING') {
         this.setupRound(this.currentRound, dist);
       }
@@ -4003,7 +4411,7 @@
       this.roundOutcomes = [];
       this.updateHUD();
       try { this.sound.playWhistle(); } catch (e) {}
-      this.setupRound(1);
+      this.setupRound(1, this.selectedDistance);
     }
 
     cleanCelebration() {
@@ -4024,12 +4432,23 @@
       this.dom.btnKick.textContent = 'Swing Foot';
       this.dom.aimHint.style.display = 'flex';
       this.dom.outcomeBanner.className = '';
+      this.hideReplayOverlay();
       this.confetti.stop();
       this.cleanCelebration();
 
       // Support 25m, 40m, 50m distances
       const distZ = customDist || this.selectedDistance || 25.0;
-      const latSpread = distZ >= 48 ? 14.0 : (distZ >= 38 ? 11.0 : 8.0);
+      this.selectedDistance = distZ;
+
+      document.querySelectorAll('.btn-dist').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.dist, 10) === distZ);
+      });
+      document.querySelectorAll('.home-dist-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.dist, 10) === distZ);
+      });
+
+      // Natural lateral angles without driving ball out-of-bounds
+      const latSpread = distZ >= 48 ? 8.0 : (distZ >= 38 ? 7.0 : 6.0);
       const latX = (Math.random() - 0.5) * latSpread;
       this.ballStartPos.set(latX, 0.11, distZ);
 
@@ -4039,30 +4458,58 @@
       // Position Player Kicker behind the ball ready for run-up
       this.kicker.setPositionAtBall(this.ballStartPos);
 
-      // Setup Wall & Keeper
+      // Setup Wall & Keeper scaled naturally by distance & difficulty
       let wallCount = 4;
-      if (this.difficulty === 'casual') wallCount = 3;
-      if (this.difficulty === 'legend') wallCount = 5;
-
+      if (distZ >= 48) {
+        wallCount = this.difficulty === 'casual' ? 1 : (this.difficulty === 'legend' ? 3 : 2);
+      } else if (distZ >= 38) {
+        wallCount = this.difficulty === 'casual' ? 2 : (this.difficulty === 'legend' ? 4 : 3);
+      } else {
+        wallCount = this.difficulty === 'casual' ? 3 : (this.difficulty === 'legend' ? 5 : 4);
+      }
       this.wall.setupWall(this.ballStartPos, wallCount);
       this.keeper.reset(this.difficulty);
 
       // Natural aim towards open side of goal
-      this.aimPoint.set(-Math.sign(latX) * 2.0, 1.45);
-      // Re-apply shot type curve on round reset
+      this.aimPoint.set(-Math.sign(latX || 1) * 1.8, 1.6);
       this.setShotType(this.shotType);
       this.aimGuide.setVisible(true);
+
+      // Camera FOV framing: zoom subtly at 40m/50m so goal and reticle are clearly visible
+      this.camera.fov = distZ >= 48 ? 60 : (distZ >= 38 ? 66 : 72);
+      this.camera.updateProjectionMatrix();
 
       this.updateHUD();
       this.updateAimStatusDisplay();
     }
 
+    getLaunchSpeed(distZ, power, shotType) {
+      let speedBase = 22.0;
+      let speedScale = 8.0;
+      if (distZ >= 48) {
+        speedBase = 29.5;
+        speedScale = 12.5; // 50m rocket
+      } else if (distZ >= 38) {
+        speedBase = 26.5;
+        speedScale = 10.5; // 40m long-range
+      }
+      let powerMult = 1.0;
+      if (shotType === 'finesse') powerMult = 0.88;
+      else if (shotType === 'trivela') powerMult = 0.92;
+      return (speedBase + power * speedScale) * powerMult;
+    }
+
     // Executes the physical run-up and strike through the ball
     executeFootStrike() {
-      if (this.state !== 'AIMING') return;
+      if (this.state !== 'AIMING' || this.isReplaying) return;
       this.state = 'RUN_UP';
       this.dom.aimHint.style.display = 'none';
       this.aimGuide.setVisible(false);
+
+      this.replayFrames = [];
+      this.recordingShot = true;
+      this.shotStartTime = performance.now();
+      this.clearAutoAdvance();
 
       const finalPower = Math.max(0.20, Math.min(1.0, this.power));
       this.dom.powerBarFill.style.width = `${finalPower * 100}%`;
@@ -4077,49 +4524,25 @@
         finalPower,
         this.curveValue,
         () => {
-          // Footstep cleat turf thump during sprint!
           this.sound.playStep();
         },
         () => {
-          // Impact callback when boot connects with ball!
           this.state = 'FLIGHT';
           this.sound.playKick();
 
-          // Check if shot is a Knuckleball
           const isKnuckle = this.isKnuckleMode || (Math.abs(this.curveValue) <= 0.14 && finalPower >= 0.70);
-
           const distZ = this.ballStartPos.z;
-          // Launch speed scales with distance & shot type
-          let speedBase = 22.0;
-          let speedScale = 8.0;
-          if (distZ >= 48) {
-            speedBase = 25.0;
-            speedScale = 14.0; // 50m rocket
-          } else if (distZ >= 38) {
-            speedBase = 24.0;
-            speedScale = 12.0; // 40m long-range
-          }
+          const launchSpeed = this.getLaunchSpeed(distZ, finalPower, this.shotType);
 
-          // Shot-type modifiers
-          let powerMult = 1.0;
           let curveMult = 1.0;
-          if (this.shotType === 'finesse') {
-            powerMult = 0.84;  // Softer, more placed
-            curveMult = 1.6;   // More spin/curl
-          } else if (this.shotType === 'trivela') {
-            powerMult = 0.90;  // Outside foot bend
-            curveMult = 1.75;
-          }
+          if (this.shotType === 'finesse') curveMult = 1.6;
+          else if (this.shotType === 'trivela') curveMult = 1.75;
 
-          const launchSpeed = (speedBase + finalPower * speedScale) * powerMult;
-
-          // Magnus Spin — enhanced by shot type
           let sideSpin = -this.curveValue * 32.0 * curveMult;
           let topSpin = -12.0 * finalPower;
           if (this.shotType === 'finesse') {
-            topSpin = -8.0 * finalPower; // Less topspin = more float & dip
+            topSpin = -8.0 * finalPower;
           } else if (this.shotType === 'trivela') {
-            // Trivela: reverse spin direction (outside-of-foot)
             sideSpin = this.curveValue * 38.0 * curveMult;
             topSpin = -6.0 * finalPower;
           }
@@ -4129,7 +4552,6 @@
           }
           const spinVector = new THREE.Vector3(topSpin, sideSpin, 0);
 
-          // *** Physics-accurate solver: calculates initial velocity taking power into account ***
           const aimX = THREE.MathUtils.clamp(this.aimPoint.x, -3.5, 3.5);
           const aimY = THREE.MathUtils.clamp(this.aimPoint.y, 0.35, 3.05);
           const initialVelocity = this.physics.solveInitialVelocity(
@@ -4158,7 +4580,6 @@
       this.fireworks.burst();
       this.spawnCelebratingTeammates();
 
-      // Show celebration cutscene overlay after brief pitch run
       setTimeout(() => {
         if (this.dom.celebrationScreen) {
           this.dom.celebrationScreen.classList.add('visible');
@@ -4172,7 +4593,6 @@
       this.celebrationGroup = new THREE.Group();
       this.scene.add(this.celebrationGroup);
 
-      // Sparkling 3D World Cup Trophy on Presentation Podium
       const goldMat = new THREE.MeshStandardMaterial({
         color: 0xffd700,
         metalness: 0.95,
@@ -4195,7 +4615,6 @@
       this.celebrationGroup.add(trophyBase);
       this.trophyMesh = trophyBase;
 
-      // Celebrating Spain teammates running toward Yamal
       this.teammates = [];
       const offsets = [
         [-3.2, 4.0], [2.8, 4.5], [-4.2, 2.0], [3.5, 2.2], [-2.0, 5.5], [1.8, 5.8]
@@ -4204,7 +4623,6 @@
         const mate = CharacterFactory.createHumanoid(0xc8102e, false);
         mate.position.set(this.ballStartPos.x + ox * 2.2, 0, this.ballStartPos.z + oz * 1.8);
         mate.lookAt(this.ballStartPos.x, 0, this.ballStartPos.z);
-        // Arms up cheering
         if (mate.children[4]) mate.children[4].rotation.z = 2.4;
         if (mate.children[5]) mate.children[5].rotation.z = -2.4;
         this.celebrationGroup.add(mate);
@@ -4219,6 +4637,9 @@
     resolveShot(outcome, detailMsg = '') {
       if (this.state === 'CUTSCENE') return;
       this.state = 'CUTSCENE';
+
+      this.recordingShot = false;
+      this.lastRecordedReplay = [...this.replayFrames];
 
       const isGoal = outcome === 'GOAL';
       if (isGoal) {
@@ -4272,13 +4693,159 @@
 
       this.showOutcomeBanner(bannerTitle, finalDetail);
 
-      setTimeout(() => {
-        if (this.currentRound >= this.totalRounds) {
-          this.endGame();
-        } else {
-          this.setupRound(this.currentRound + 1);
+      this.clearAutoAdvance();
+      this.autoAdvanceTimer = setTimeout(() => {
+        if (!this.isReplaying) {
+          if (this.currentRound >= this.totalRounds) {
+            this.endGame();
+          } else {
+            this.setupRound(this.currentRound + 1, this.selectedDistance);
+          }
         }
-      }, 3200);
+      }, 4200);
+    }
+
+    clearAutoAdvance() {
+      if (this.autoAdvanceTimer) {
+        clearTimeout(this.autoAdvanceTimer);
+        this.autoAdvanceTimer = null;
+      }
+    }
+
+    startReplay() {
+      if (!this.lastRecordedReplay || this.lastRecordedReplay.length < 4) return;
+      this.clearAutoAdvance();
+      this.isReplaying = true;
+      this.replayPaused = false;
+      this.replayTime = 0;
+      this.dom.outcomeBanner.className = '';
+      this.showReplayOverlay();
+    }
+
+    stopReplay() {
+      if (!this.isReplaying) return;
+      this.isReplaying = false;
+      this.hideReplayOverlay();
+      if (this.currentRound >= this.totalRounds) {
+        this.endGame();
+      } else {
+        this.setupRound(this.currentRound + 1, this.selectedDistance);
+      }
+    }
+
+    toggleReplayPause() {
+      if (!this.isReplaying) return;
+      this.replayPaused = !this.replayPaused;
+      if (this.dom.replayPlayPauseText) {
+        this.dom.replayPlayPauseText.textContent = this.replayPaused ? 'Play' : 'Pause';
+      }
+      if (this.dom.replayIconPlay && this.dom.replayIconPause) {
+        this.dom.replayIconPlay.style.display = this.replayPaused ? 'block' : 'none';
+        this.dom.replayIconPause.style.display = this.replayPaused ? 'none' : 'block';
+      }
+    }
+
+    rewindReplay() {
+      this.replayTime = 0;
+    }
+
+    setReplaySpeed(spd) {
+      this.replaySpeed = spd;
+      document.querySelectorAll('.replay-speed-btn').forEach(b => {
+        b.classList.toggle('active', parseFloat(b.dataset.spd) === spd);
+      });
+      if (this.dom.replaySpeedIndicator) {
+        let label = `${spd}x NORMAL`;
+        if (spd === 0.25) label = '0.25x SUPER SLOW-MO';
+        else if (spd === 0.5) label = '0.5x SLOW-MO';
+        this.dom.replaySpeedIndicator.textContent = label;
+      }
+    }
+
+    showReplayOverlay() {
+      if (this.dom.replayOverlay) {
+        this.dom.replayOverlay.classList.add('visible');
+        this.dom.replayOverlay.style.display = 'block';
+      }
+      if (this.dom.replayCamName) {
+        this.dom.replayCamName.textContent = this.cameraModes[this.currentCamIdx];
+      }
+      if (this.dom.replayPlayPauseText) {
+        this.dom.replayPlayPauseText.textContent = 'Pause';
+      }
+      if (this.dom.replayIconPlay && this.dom.replayIconPause) {
+        this.dom.replayIconPlay.style.display = 'none';
+        this.dom.replayIconPause.style.display = 'block';
+      }
+    }
+
+    hideReplayOverlay() {
+      if (this.dom.replayOverlay) {
+        this.dom.replayOverlay.classList.remove('visible');
+        this.dom.replayOverlay.style.display = 'none';
+      }
+    }
+
+    updateReplayPlayback(dt) {
+      if (!this.isReplaying || !this.lastRecordedReplay || this.lastRecordedReplay.length < 2) return;
+
+      if (!this.replayPaused) {
+        this.replayTime += dt * this.replaySpeed;
+      }
+
+      const frames = this.lastRecordedReplay;
+      const maxTime = frames[frames.length - 1].time;
+
+      if (this.replayTime > maxTime) {
+        this.replayTime = 0;
+      }
+
+      let idx0 = 0;
+      for (let i = 0; i < frames.length - 1; i++) {
+        if (frames[i + 1].time >= this.replayTime) {
+          idx0 = i;
+          break;
+        }
+      }
+      const f0 = frames[idx0];
+      const f1 = frames[idx0 + 1] || f0;
+      const duration = (f1.time - f0.time) || 0.0001;
+      const alpha = Math.min(1.0, Math.max(0.0, (this.replayTime - f0.time) / duration));
+
+      // Interpolate ball position & rotation
+      this.physics.pos.lerpVectors(f0.ballPos, f1.ballPos, alpha);
+      this.ballMesh.position.copy(this.physics.pos);
+      this.ballMesh.rotation.x = THREE.MathUtils.lerp(f0.ballRot.x, f1.ballRot.x, alpha);
+      this.ballMesh.rotation.y = THREE.MathUtils.lerp(f0.ballRot.y, f1.ballRot.y, alpha);
+      this.ballMesh.rotation.z = THREE.MathUtils.lerp(f0.ballRot.z, f1.ballRot.z, alpha);
+
+      // Kicker
+      if (f0.kickerPos && f1.kickerPos) {
+        this.kicker.mesh.position.lerpVectors(f0.kickerPos, f1.kickerPos, alpha);
+      }
+      this.kicker.runUpProgress = THREE.MathUtils.lerp(f0.kickerProgress, f1.kickerProgress, alpha);
+
+      // Keeper
+      if (f0.keeperPos && f1.keeperPos) {
+        this.keeper.mesh.position.lerpVectors(f0.keeperPos, f1.keeperPos, alpha);
+      }
+      this.keeper.mesh.rotation.z = THREE.MathUtils.lerp(f0.keeperRotZ, f1.keeperRotZ, alpha);
+      if (this.keeper.mesh.userData.leftArm) {
+        this.keeper.mesh.userData.leftArm.rotation.z = THREE.MathUtils.lerp(f0.keeperLeftArmRotZ, f1.keeperLeftArmRotZ, alpha);
+      }
+      if (this.keeper.mesh.userData.rightArm) {
+        this.keeper.mesh.userData.rightArm.rotation.z = THREE.MathUtils.lerp(f0.keeperRightArmRotZ, f1.keeperRightArmRotZ, alpha);
+      }
+
+      // Wall defenders
+      const jumpY = THREE.MathUtils.lerp(f0.wallJumpY || 0, f1.wallJumpY || 0, alpha);
+      this.wall.defenders.forEach(d => {
+        d.position.y = jumpY;
+      });
+      this.wall.currentJumpY = jumpY;
+
+      // Ball trail
+      this.trail.update(this.physics.pos, true);
     }
 
     showOutcomeBanner(outcome, detail) {
@@ -4470,7 +5037,7 @@
     updateCamera() {
       const mode = this.cameraModes[this.currentCamIdx];
 
-      if (this.state === 'CUTSCENE') {
+      if (this.state === 'CUTSCENE' && !this.isReplaying) {
         if (this.scenario === 'worldcup' && this.roundOutcomes[this.roundOutcomes.length - 1] === 'goal') {
           // Cinematic 360-degree celebration camera orbiting Yamal, celebrating teammates, and golden trophy!
           const t = Date.now() * 0.0007;
@@ -4491,7 +5058,7 @@
       }
 
       if (mode === 'Third Person') {
-        if (this.state === 'RUN_UP') {
+        if (this.state === 'RUN_UP' || (this.isReplaying && this.physics.pos.z >= this.ballStartPos.z - 0.1)) {
           // Dynamic tracking behind player as he sprints toward the ball
           const p = this.kicker.runUpProgress;
           const eyeStartX = this.ballStartPos.x - 0.65;
@@ -4506,21 +5073,20 @@
           this.camera.position.set(camX, camY, camZ);
           this._lookTarget.set(this.aimPoint.x * 0.45, 1.45, 0);
           this.camera.lookAt(this._lookTarget);
-        } else if (this.state === 'FLIGHT') {
+        } else if (this.state === 'FLIGHT' || (this.isReplaying && this.physics.pos.z < this.ballStartPos.z - 0.1)) {
           // Smooth third-person chase camera tracking curling ball from behind & above
           const bx = this.physics.pos.x;
           const by = this.physics.pos.y;
           const bz = this.physics.pos.z;
           const targetX = bx * 0.35;
-          const targetY = Math.min(3.8, Math.max(1.85, by * 0.38 + 1.8));
-          const targetZ = Math.min(this.ballStartPos.z + 1.2, bz + 4.0);
+          const targetY = Math.min(4.2, Math.max(1.85, by * 0.38 + 1.8));
+          const targetZ = Math.min(this.ballStartPos.z + 1.8, bz + 4.2);
           this.camera.position.lerp(this._camTarget.set(targetX, targetY, targetZ), 0.12);
           const lookZ = Math.max(bz - 3.5, 0);
           const lookY = Math.min(2.5, Math.max(0.9, by * 0.6));
           this.camera.lookAt(this._lookTarget.set(bx * 0.3, lookY, lookZ));
         } else {
           // AIMING: Over-the-shoulder 3rd-person POV behind Lamine Yamal (#19 Spain)
-          // Complete immersive view of kicker, turf, defensive wall, goalkeeper, and goal!
           const eyeX = this.ballStartPos.x - 0.65;
           const eyeY = 2.05;
           const eyeZ = this.ballStartPos.z + 3.8;
@@ -4528,7 +5094,7 @@
           this.camera.lookAt(this._lookTarget.set(this.aimPoint.x * 0.45, 1.45, 0));
         }
       } else if (mode === 'First Person') {
-        if (this.state === 'RUN_UP') {
+        if (this.state === 'RUN_UP' || (this.isReplaying && this.physics.pos.z >= this.ballStartPos.z - 0.1)) {
           const p = this.kicker.runUpProgress;
           const eyeStartX = this.ballStartPos.x - 0.7;
           const eyeEndX = this.ballStartPos.x - 0.25;
@@ -4542,7 +5108,7 @@
           this.camera.position.set(camX, camY, camZ);
           this._lookTarget.set(this.aimPoint.x * 0.7, 1.2, 0);
           this.camera.lookAt(this._lookTarget);
-        } else if (this.state === 'FLIGHT') {
+        } else if (this.state === 'FLIGHT' || (this.isReplaying && this.physics.pos.z < this.ballStartPos.z - 0.1)) {
           const bx = this.physics.pos.x;
           const by = this.physics.pos.y;
           const bz = this.physics.pos.z;
@@ -4561,13 +5127,42 @@
           this.camera.lookAt(this._lookTarget.set(this.aimPoint.x * 0.7, 1.25, 0));
         }
       } else if (mode === 'TV Broadcast') {
-        this.camera.position.lerp(this._camTarget.set(-26, 10, 14), 0.08);
+        const tvZ = Math.min(28, Math.max(14, this.ballStartPos.z * 0.42));
+        this.camera.position.lerp(this._camTarget.set(-28, 11, tvZ), 0.08);
         this.camera.lookAt(this._lookTarget.set(this.physics.pos.x, this.physics.pos.y + 0.5, this.physics.pos.z));
       } else if (mode === 'Keeper POV') {
         this._camTarget.set(this.keeper.mesh.position.x * 0.7, 1.78, -1.25);
         this.camera.position.lerp(this._camTarget, 0.08);
         this._lookTarget.set(this.physics.pos.x, Math.max(0.8, this.physics.pos.y), this.physics.pos.z);
         this.camera.lookAt(this._lookTarget);
+      } else if (mode === 'Defender View') {
+        // DEFENDER VIEW (WALL POV)
+        // Position camera in the defensive wall at eye level (~1.78m)
+        const wallCenter = this.wall.getCenter();
+        const wallJumpY = this.wall.currentJumpY || 0;
+        const camX = wallCenter.x;
+        const camY = 1.78 + wallJumpY;
+        const camZ = wallCenter.z;
+        this.camera.position.set(camX, camY, camZ);
+
+        const isFlight = (this.state === 'FLIGHT' || (this.isReplaying && this.physics.pos.z < this.ballStartPos.z - 0.2));
+        if (isFlight) {
+          if (this.physics.pos.z > wallCenter.z - 0.4) {
+            // Ball is approaching the wall: track it coming towards you!
+            this._lookTarget.set(this.physics.pos.x, Math.max(0.6, this.physics.pos.y), this.physics.pos.z);
+          } else {
+            // Ball passed the wall: turn around to watch it crash into goal or goalkeeper!
+            this._lookTarget.set(this.physics.pos.x * 0.7, Math.max(0.8, this.physics.pos.y), this.physics.pos.z);
+          }
+          this.camera.lookAt(this._lookTarget);
+        } else if (this.state === 'CUTSCENE' && !this.isReplaying) {
+          this._lookTarget.set(this.physics.pos.x * 0.5, 1.4, 0);
+          this.camera.lookAt(this._lookTarget);
+        } else {
+          // AIMING / RUN_UP: Watch kicker Lamine Yamal approach and strike from the wall
+          this._lookTarget.set(this.ballStartPos.x, 0.85, this.ballStartPos.z);
+          this.camera.lookAt(this._lookTarget);
+        }
       }
     }
 
@@ -4578,44 +5173,69 @@
       const dt = Math.min((now - this.lastTime) / 1000, 0.05);
       this.lastTime = now;
 
-      // Whole-screen power charging
-      if (this.state === 'AIMING' && this.isChargingPower) {
-        this.power = Math.min(1.0, this.power + dt * this.chargeSpeed);
-        this.dom.powerBarFill.style.width = `${this.power * 100}%`;
-        this.kicker.updateFromMouse(this.aimPoint.x / 3.4, this.power, this.curveValue);
-      }
-
-      // Update Aim Guide with exact physical trajectory
-      if (this.state === 'AIMING') {
-        this.aimGuide.updateGuide(this.ballStartPos, this.aimPoint, this.curveValue, this.isKnuckleMode, this.physics);
-      }
-
-      const isBallInFlight = (this.state === 'FLIGHT' || this.state === 'CUTSCENE');
-      this.kicker.update(dt);
-      this.physics.update(dt);
-      this.wall.update(dt);
-      // Pass ballPos to keeper so proximity gate prevents early unrealistic jumping
-      this.keeper.update(dt, isBallInFlight, this.physics.pos);
-      this.confetti.update();
-      this.fireworks.update();
-      this.trail.update(this.physics.pos, this.state === 'FLIGHT');
-      this.stadium.updateNet(dt, this.physics.pos, this.physics.inGoalNet);
-
-      // Animate celebration 3D cutscene
-      if (this.state === 'CUTSCENE' && this.celebrationGroup) {
-        if (this.trophyMesh) {
-          this.trophyMesh.rotation.y += dt * 1.6;
+      if (this.isReplaying) {
+        this.updateReplayPlayback(dt);
+      } else {
+        // Whole-screen power charging
+        if (this.state === 'AIMING' && this.isChargingPower) {
+          this.power = Math.min(1.0, this.power + dt * this.chargeSpeed);
+          this.dom.powerBarFill.style.width = `${this.power * 100}%`;
+          this.kicker.updateFromMouse(this.aimPoint.x / 3.4, this.power, this.curveValue);
         }
-        if (this.teammates && this.teammates.length > 0) {
-          this.teammates.forEach(tm => {
-            tm.mesh.position.lerp(tm.target, dt * tm.speed * 0.45);
-          });
+
+        // Update Aim Guide with exact physical trajectory
+        if (this.state === 'AIMING') {
+          this.aimGuide.updateGuide(this.ballStartPos, this.aimPoint, this.curveValue, this.isKnuckleMode, this.physics, this.shotType);
         }
+
+        const isBallInFlight = (this.state === 'FLIGHT' || this.state === 'CUTSCENE');
+        this.kicker.update(dt);
+        this.physics.update(dt);
+        this.wall.update(dt);
+        // Pass ballPos to keeper so proximity gate prevents early unrealistic jumping
+        this.keeper.update(dt, isBallInFlight, this.physics.pos);
+        this.confetti.update();
+        this.fireworks.update();
+        this.trail.update(this.physics.pos, this.state === 'FLIGHT');
+        this.stadium.updateNet(dt, this.physics.pos, this.physics.inGoalNet);
+
+        // Frame buffer recording for Instant Replay
+        if (this.recordingShot && (this.state === 'RUN_UP' || this.state === 'FLIGHT' || this.state === 'CUTSCENE')) {
+          if (this.replayFrames.length < 500) {
+            this.replayFrames.push({
+              time: (performance.now() - this.shotStartTime) / 1000,
+              state: this.state,
+              ballPos: this.physics.pos.clone(),
+              ballRot: new THREE.Euler().copy(this.ballMesh.rotation),
+              kickerProgress: this.kicker.runUpProgress,
+              kickerPos: this.kicker.mesh.position.clone(),
+              keeperPos: this.keeper.mesh.position.clone(),
+              keeperRotZ: this.keeper.mesh.rotation.z,
+              keeperLeftArmRotZ: this.keeper.mesh.userData.leftArm ? this.keeper.mesh.userData.leftArm.rotation.z : 0,
+              keeperRightArmRotZ: this.keeper.mesh.userData.rightArm ? this.keeper.mesh.userData.rightArm.rotation.z : 0,
+              wallJumpProgress: this.wall.jumpProgress,
+              wallJumpY: this.wall.currentJumpY || 0,
+              inGoalNet: this.physics.inGoalNet
+            });
+          }
+        }
+
+        // Animate celebration 3D cutscene
+        if (this.state === 'CUTSCENE' && this.celebrationGroup) {
+          if (this.trophyMesh) {
+            this.trophyMesh.rotation.y += dt * 1.6;
+          }
+          if (this.teammates && this.teammates.length > 0) {
+            this.teammates.forEach(tm => {
+              tm.mesh.position.lerp(tm.target, dt * tm.speed * 0.45);
+            });
+          }
+        }
+
+        this.checkCollisionsAndOutcomes();
       }
 
-      this.checkCollisionsAndOutcomes();
       this.updateCamera();
-
       this.renderer.render(this.scene, this.camera);
     }
 
