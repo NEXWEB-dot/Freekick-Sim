@@ -6,36 +6,36 @@
 # What is FreeKick Sim?
 A free kick sim browser based game Dont have to download just click the link and enjoy!
 ## Why i built this?
-Every Freekick sim is either needs to be downloaded or does not meet the requirments so i decided to take matters in my own hands.
-I build a pure, zero install WebGL simualation that captures the Art of freekicks!
+Every Freekick sim is either needs to be downloaded or does not meet the requirments so i decided to take matters in my own hands. I build a pure, zero install WebGL simualation that captures the Art of freekicks!
 
-##  Key Features
+## Key features
 Multi Distance shot
 25m
 40m
 50m
-##  Tech Stack & Architecture
+### Tech stack & Architecture
 Core rendering Three,js
 Physics pure js
 Styling Vanilla CSS
-##  Repository Structure
-
+## Repository Structure
 ```
-├── index.html        # Complete standalone application (Three.js 3D game, styles & logic)
-├── README.md         # Documentation & Hack Club submission guide
+
+├── index.html    # Complete standalone application (Three.js 3D game, styles & logic)
+├── README.md     # Documentation & Hack Club submission guide
 ```
-##  Hack Club YSWS & Arcade Compliance
+## Hack Club YSWS & Arcade Compliance
+### Shippable & Playable
 
-- **Shippable & Playable**: Completely functional end-to-end game with full physics, replay system, and multiple camera views.
-- **Original Codebase**: Built ground-up with custom physics solver and procedural 3D humanoids.
-- **No Build Friction**: Zero dependencies to configure; runs immediately on any computer with a browser.
-
+Completely functional end-to-end game with full physics, replay system, and multiple camera views.
+### Original
+Codebase written from scratch with custom physics solver and procedural 3D humanoids.
+### No Build Friction
+Zero dependencies to configure; runs immediately on any computer with a browser.
 ---
 
-##  License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
-
 ---
 
-*Made with ❤️ for football lovers, physics nerds, and Hack Club.*
+Made with ❤️ for football lovers, physics nerds, and Hack Club.
