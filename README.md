@@ -9,22 +9,22 @@ A free kick sim browser based game Dont have to download just click the link and
 Every Freekick sim is either needs to be downloaded or does not meet the requirments so i decided to take matters in my own hands.
 I build a pure, zero install WebGL simualation that captures the Art of freekicks!
 
-## 🚀 Key Features
+##  Key Features
 Multi Distance shot
 25m
 40m
 50m
-## 🛠️ Tech Stack & Architecture
+##  Tech Stack & Architecture
 Core rendering Three,js
 Physics pure js
 Styling Vanilla CSS
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 ├── index.html        # Complete standalone application (Three.js 3D game, styles & logic)
 ├── README.md         # Documentation & Hack Club submission guide
 ```
-## 🏅 Hack Club YSWS & Arcade Compliance
+##  Hack Club YSWS & Arcade Compliance
 
 - **Shippable & Playable**: Completely functional end-to-end game with full physics, replay system, and multiple camera views.
 - **Original Codebase**: Built ground-up with custom physics solver and procedural 3D humanoids.
@@ -32,7 +32,7 @@ Styling Vanilla CSS
 
 ---
 
-## 📄 License
+##  License
 
 This project is open source and available under the [MIT License](LICENSE).
 
